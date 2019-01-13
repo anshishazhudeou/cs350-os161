@@ -162,6 +162,21 @@ common_prog(int nargs, char **args)
 }
 
 /*
+ * Command for enabling debugging messages of type DB THREADS. 
+ */
+
+static
+int
+cmd_dth(int nargs, char **args)
+{
+	(void)nargs;
+	(void)args;
+	dbflags=DB_THREADS;
+	return 0;	
+}
+
+
+/*
  * Command for running an arbitrary userlevel program.
  */
 static
@@ -426,6 +441,7 @@ showmenu(const char *name, const char *x[])
 }
 
 static const char *opsmenu[] = {
+	"[dth]     Enable debug thread       ",
 	"[s]       Shell                     ",
 	"[p]       Other program             ",
 	"[mount]   Mount a filesystem        ",
@@ -536,6 +552,7 @@ static struct {
 	{ "?t",		cmd_testmenu },
 
 	/* operations */
+	{"dth",     cmd_dth },
 	{ "s",		cmd_shell },
 	{ "p",		cmd_prog },
 	{ "mount",	cmd_mount },
@@ -608,7 +625,7 @@ cmd_dispatch(char *cmd)
 	char *context;
 	int i, result;
 
-	for (word = strtok_r(cmd, " \t", &context);
+	for (word = strtok_r(cmd, " \t", &context); /* cmd and context is the command text */
 	     word != NULL;
 	     word = strtok_r(NULL, " \t", &context)) {
 
@@ -624,12 +641,12 @@ cmd_dispatch(char *cmd)
 	}
 
 	for (i=0; cmdtable[i].name; i++) {
-		if (*cmdtable[i].name && !strcmp(args[0], cmdtable[i].name)) {
-			KASSERT(cmdtable[i].func!=NULL);
+		if (*cmdtable[i].name && !strcmp(args[0], cmdtable[i].name)) { /*see which one in the cmdtable that matches the argment that we pass from the command line*/
+			KASSERT(cmdtable[i].func!=NULL); /* see if there's a corresponding command function to execute*/
 
 			gettime(&beforesecs, &beforensecs);
 
-			result = cmdtable[i].func(nargs, args);
+			result = cmdtable[i].func(nargs, args); /*set a break point, "pwd" will go line 222*/
 
 			gettime(&aftersecs, &afternsecs);
 			getinterval(beforesecs, beforensecs,
@@ -663,7 +680,7 @@ menu_execute(char *line, int isargs)
 	char *context;
 	int result;
 
-	for (command = strtok_r(line, ";", &context);
+	for (command = strtok_r(line, ";", &context); /* convert command from command line to a string and assign to command*/
 	     command != NULL;
 	     command = strtok_r(NULL, ";", &context)) {
 
