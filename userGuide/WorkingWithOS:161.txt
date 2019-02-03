@@ -1,0 +1,65 @@
+Building an OS/161 Kernel
+	1. configure:
+	 	* Exception that needs to reconfigure:
+	 		-- add/remove new kernel source file
+	 		-- start a new assignment
+	 	* Configure file is location in cs350-os161/os161-1.99/kern/conf/conf.kern
+	 	* If you add a new file to the kernel code, you must add a corresponding file 	
+	 	  declaration in the kern.conf(search (file      thread/spinlock.c)) and then reconfigure the kernel by running ./config ASSTX
+	 2. build:
+	 	Kernels should always be built in the kernel build directory, which is cs350-os161/os161-1.99/kern/compile/ASSTX for the Xth assignment. (This directory is created when you configure the kernel.) To build a new kernel, issue the following commands in the kernel build directory:
+	 		bmake depend
+	 		bmake
+	 	If your kernel builds successfully, you should see a line similar to this near the end of the output from bmake:
+		*** This is ASST1 build #5 ***
+	3. install:
+		If everything goes smoothly with the kernel build, you may then install the new kernel. Do this by running the command
+		
+		bmake install
+
+		in the kernel build directory. This will put a copy of your newly-built kernel in the directory cs350-os161/root in a file called kernel-ASSTX. It will also set the symbolic link kernel (also in the $OS161TOP/root directory) to refer to the newly-installed kernel.
+----------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------
+Building the OS/161 User-Level Programs
+OS/161 comes with a variety of user-level programs that can run on top of the OS/161 kernel. These include standard UNIX-style utility programs, like ls and cat, and variety of test programs. The source files for the utility programs are located in cs350-os161/os161-1.99/user/{bin,sbin}. The source files for the test programs are located in cs350-os161/os161-1.99/user/{uw-testbin,testbin}.
+
+User-level programs are built and installed from the directory cs350-os161/os161-1.99/. To build and install all of the user-level programs, simply run
+bmake
+bmake install
+User-level programs are installed under cs350-os161/root/ in the bin, sbin, testbin and uw-testbin directories.
+----------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------
+Running OS/161
+When you run OS/161, you should be in the runtime root directory, which is cs350-os161/root
+sys161 kernel-ASSTX 
+or simply:
+sys161 kernel
+
+you should see
+Put-your-group-name-here's system version 0 (ASST1 #5)
+----------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------
+Debugging an OS/161 Kernel using GDB
+To debug, first start OS/161 on sys/161 in one of the windows.
+sys161 -w kernel
+Make sure that you are in the runtime root directory when you do this. The -w option tells sys/161 to wait for a debugger connection. 
+Next, in the other window (your debug window), move into the runtime root directory - the same directory in which you are running sys161 - and run cs350-gdb on the kernel and tell GDB to connect to sys/161:
+cs350-gdb kernel
+The (gdb) is the debugger's command prompt. The debugger is now stopped, waiting for you to enter a command. You want to give it the following commands:
+(gdb> dir ../os161-1.99/kern/compile/ASSTX
+(gdb) target remote unix:.sockets/gdb
+The first command just tells gdb where to find the .o files for your kernel. The second command tells gdb to connect to the waiting sys161 program that is running in your other window.
+you should see a message like sys161: New debugger connection in the sys161 window.
+At this point, your kernel is running under control of the debugger.
+More info about using GDB, see
+https://www.student.cs.uwaterloo.ca/~cs350/common/gdb.html
+----------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------
+System Documentation
+OS/161 Manual
+https://www.student.cs.uwaterloo.ca/~cs350/common/os161-man/
+
+
+
+
+

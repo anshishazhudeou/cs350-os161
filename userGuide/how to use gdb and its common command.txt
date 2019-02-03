@@ -1,0 +1,15 @@
+how to use gdb and its common command
+--------------------------------------------------------------------------------------
+* open two windows, login and check if they are using the same machine
+* boot OS/161 on System/161
+	% cd ~/cs350/root
+	% sys161 -w kernel
+	Use the -w option to tell System/161 to wait for a debugger connection
+* Next, in the other window (your debug window), run cs350-gdb on the same kernel
+	% cd ~/cs350/root
+  	% cs350-gdb kernel
+  	(gdb) dir ../os161-1.99/kern/compile/ASST0
+  	(gdb) target remote unix:.sockets/gdb
+--------------------------------------------------------------------------------------
+Most common GDB commands
+https://www.student.cs.uwaterloo.ca/~cs350/common/gdb.html

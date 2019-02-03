@@ -1,0 +1,110 @@
+breakpoints
+awatch -- Set a watchpoint for an expression
+break -- Set breakpoint at specified line or function
+catch -- Set catchpoints to catch events
+clear -- Clear breakpoint at specified line or function
+commands -- Set commands to be executed when a breakpoint is hit
+condition -- Specify breakpoint number N to break only if COND is true
+delete -- Delete some breakpoints or auto-display expressions
+delete breakpoints -- Delete some breakpoints or auto-display expressions
+delete display --h
+delete mem -- Delete memory region
+delete tracepoints -- Delete specified tracepoints
+disable -- Disable some breakpoints
+disable breakpoints -- Disable some breakpoints
+disable display -- Disable some expressions to be displayed when program stops
+disable mem -- Disable memory region
+disable tracepoints -- Disable specified tracepoints
+enable -- Enable some breakpoints
+enable delete -- Enable breakpoints and delete when hit
+enable display -- Enable some expressions to be displayed when program stops
+enable mem -- Enable memory region
+enable once -- Enable breakpoints for one hit
+enable tracepoints -- Enable specified tracepoints
+hbreak -- Set a hardware assisted  breakpoint
+ignore -- Set ignore-count of breakpoint number N to COUNT
+rbreak -- Set a breakpoint for all functions matching REGEXP
+rwatch -- Set a read watchpoint for an expression
+tbreak -- Set a temporary breakpoint
+tcatch -- Set temporary catchpoints to catch events
+thbreak -- Set a temporary hardware assisted breakpoint
+watch -- Set a watchpoint for an expression
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+advance -- Continue the program up to the given location (same form as args for break command)
+attach -- Attach to a process or file outside of GDB
+continue -- Continue program being debugged
+detach -- Detach a process or file previously attached
+disconnect -- Disconnect from a target
+finish -- Execute until selected stack frame returns
+handle -- Specify how to handle a signal
+interrupt -- Interrupt the execution of the debugged program
+jump -- Continue program being debugged at specified line or address
+kill -- Kill execution of program being debugged
+next -- Step program
+nexti -- Step one instruction
+run -- Start debugged program
+signal -- Continue program giving it signal specified by the argument
+start -- Run the debugged program until the beginning of the main procedure
+step -- Step program until it reaches a different source line
+stepi -- Step one instruction exactly
+target -- Connect to a target machine or process
+target async -- Use a remote computer via a serial line
+target core -- Use a core file as a target
+target exec -- Use an executable file as a target
+target extended-async -- Use a remote computer via a serial line
+target extended-remote -- Use a remote computer via a serial line
+target remote -- Use a remote computer via a serial line
+target sim -- Use the compiled-in simulator
+thread -- Use this command to switch between threads
+thread apply -- Apply a command to a list of threads
+thread apply all -- Apply a command to all threads
+until -- Execute until the program reaches a source line greater than the current
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+append -- Append target code/data to a local file
+append binary -- Append target code/data to a raw binary file
+append binary memory -- Append contents of memory to a raw binary file
+append binary value -- Append the value of an expression to a raw binary file
+append memory -- Append contents of memory to a raw binary file
+append value -- Append the value of an expression to a raw binary file
+call -- Call a function in the program
+disassemble -- Disassemble a specified section of memory
+display -- Print value of expression EXP each time the program stops
+dump -- Dump target code/data to a local file
+dump binary -- Write target code/data to a raw binary file
+dump binary memory -- Write contents of memory to a raw binary file
+dump binary value -- Write the value of an expression to a raw binary file
+dump ihex -- Write target code/data to an intel hex file
+dump ihex memory -- Write contents of memory to an ihex file
+dump ihex value -- Write the value of an expression to an ihex file
+dump memory -- Write contents of memory to a raw binary file
+dump srec -- Write target code/data to an srec file
+dump srec memory -- Write contents of memory to an srec file
+dump srec value -- Write the value of an expression to an srec file
+dump tekhex -- Write target code/data to a tekhex file
+dump tekhex memory -- Write contents of memory to a tekhex file
+dump tekhex value -- Write the value of an expression to a tekhex file
+dump value -- Write the value of an expression to a raw binary file
+init-if-undefined -- Initialize a convenience variable if necessary
+inspect -- Same as "print" command
+mem -- Define attributes for memory region or reset memory region handling to
+output -- Like "print" but don't put in value history and don't print newline
+print -- Print value of expression EXP
+print-object -- Ask an Objective-C object to print itself
+printf -- Printf "printf format string"
+ptype -- Print definition of type TYPE
+restore -- Restore the contents of FILE to target memory
+set -- Evaluate expression EXP and assign result to variable VAR
+set annotate -- Set annotation_level
+set architecture -- Set architecture of target
+set args -- Set argument list to give program being debugged when it is started
+set auto-solib-add -- Set autoloading of shared library symbols
+set backtrace -- Set backtrace specific variables
+set backtrace limit -- Set an upper bound on the number of backtrace levels
+set backtrace past-entry -- Set whether backtraces should continue past the entry point of a program
+set backtrace past-main -- Set whether backtraces should continue past "main"
+set breakpoint -- Breakpoint specific settings
+set breakpoint pending -- Set debugger's behavior regarding pending breakpoints
+set can-use-hw-watchpoints -- Set debugger's willingness to use watchpoint hardware
+set case-sensitive -- Set case sensitivity in name search

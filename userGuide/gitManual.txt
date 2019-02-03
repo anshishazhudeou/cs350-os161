@@ -1,0 +1,134 @@
+Chapter 1. Repositories and Branches
+
+$ git branch
+$ git tag -l
+$ git checkout -b new v2.6.13
+$ git branch
+  master
+* new
+
+If you decide that you’d rather see version 2.6.17, you can modify the current branch to point at v2.6.17 instead, with
+
+$ git reset --hard v2.6.17
+
+The git-show(1) command shows the most recent commit on the current branch:
+$ git 
+
+--------------------------------------------------------------
+git checkout -b <new> <start-point>
+create a new branch <new> referencing <start-point>, and check it out.
+--------------------------------------------------------------
+$ git checkout v2.6.17     # v2.6.17 is a tag name
+Note: checking out 'v2.6.17'.
+
+You are in 'detached HEAD' state.
+
+$ cat .git/HEAD
+427abfa28afedffadfca9dd8b067eb6d36bac53f
+$ git branch
+* (detached from v2.6.17)
+  master
+--------------------------------------------------------------
+Examining branches from a remote repository
+$ git branch -r
+  origin/HEAD
+  origin/html
+  origin/maint
+  origin/man
+  origin/master
+  origin/next
+  origin/pu
+  origin/todo
+--------------------------------------------------------------
+Updating a repository with git fetch
+After you clone a repository and commit a few changes of your own, you may wish to check the original repository for updates.
+
+The git-fetch command, with no arguments, will update all of the remote-tracking branches to the latest version found in the original repository. It will not touch any of your own branches—not even the "master" branch that was created for you on clone.
+--------------------------------------------------------------
+
+
+
+Chapter 2. Exploring Git history
+
+$ git tag stable-1 1b2e1d63ff
+
+You can use stable-1 to refer to the commit 1b2e1d63ff.
+
+--------------------------------------------------------------
+Chapter 3. Developing with Git
+
+A number of commands are useful for keeping track of what you’re about to commit:
+
+$ git diff --cached # difference between HEAD and the index; what
+                    # would be committed if you ran "commit" now.
+$ git diff          # difference between the index file and your
+                    # working directory; changes that would not
+                    # be included if you ran "commit" now.
+$ git diff HEAD     # difference between HEAD and working tree; what
+                    # would be committed if you ran "commit -a" now.
+$ git status        # a brief per-file summary of the above.
+
+
+--------------------------------------------------------------
+$ git merge branchname
+merges the development in the branch branchname into the current branch.
+
+--------------------------------------------------------------
+Undoing a merge
+If you get stuck and decide to just give up and throw the whole mess away, you can always return to the pre-merge state with
+
+$ git reset --hard HEAD
+
+
+--------------------------------------------------------------
+Fixing mistakes
+If you’ve messed up the working tree, but haven’t yet committed your mistake, you can return the entire working tree to the last committed state with
+
+$ git reset --hard HEAD
+
+
+--------------------------------------------------------------
+Fixing a mistake with a new commit
+Creating a new commit that reverts an earlier change is very easy; just pass the git-revert(1) command a reference to the bad commit; for example, to revert the most recent commit:
+
+$ git revert HEAD
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

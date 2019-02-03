@@ -1,0 +1,6 @@
+echo $SHELL or echo $0
+------------------------------------------------
+You can change the default shell for your account using the chsh command
+
+two shell bash and tcsh
+$csh
