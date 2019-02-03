@@ -41,7 +41,7 @@ bitmaptest(int nargs, char **args)
 	char data[TESTSIZE];
 	uint32_t x;
 	int i;
-
+	
 	(void)nargs;
 	(void)args;
 
