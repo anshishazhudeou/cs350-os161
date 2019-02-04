@@ -118,6 +118,7 @@ void lock_destroy(struct lock *);
 struct cv {
         char *cv_name;
         // add what you need here
+        struct wchan *cv_wchan; // only need the wait channel, no need for spin lock
         // (don't forget to mark things volatile as needed)
 };
 

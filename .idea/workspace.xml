@@ -10,8 +10,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2f37d654-f11e-4072-b245-572dcbb12333" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/os161-1.99/build/install/lib/libc.a" beforeDir="false" afterPath="$PROJECT_DIR$/os161-1.99/build/install/lib/libc.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/os161-1.99/build/install/lib/libtestutils.a" beforeDir="false" afterPath="$PROJECT_DIR$/os161-1.99/build/install/lib/libtestutils.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/os161-1.99/build/install/lib/libvm-funcs.a" beforeDir="false" afterPath="$PROJECT_DIR$/os161-1.99/build/install/lib/libvm-funcs.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/os161-1.99/build/user/lib/libc/libc.a" beforeDir="false" afterPath="$PROJECT_DIR$/os161-1.99/build/user/lib/libc/libc.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/os161-1.99/build/user/uw-testbin/lib/libtestutils.a" beforeDir="false" afterPath="$PROJECT_DIR$/os161-1.99/build/user/uw-testbin/lib/libtestutils.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/os161-1.99/build/user/uw-testbin/vm-funcs/libvm-funcs.a" beforeDir="false" afterPath="$PROJECT_DIR$/os161-1.99/build/user/uw-testbin/vm-funcs/libvm-funcs.a" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/os161-1.99/kern/include/synch.h" beforeDir="false" afterPath="$PROJECT_DIR$/os161-1.99/kern/include/synch.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/os161-1.99/kern/thread/synch.c" beforeDir="false" afterPath="$PROJECT_DIR$/os161-1.99/kern/thread/synch.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/root/lib/libc.a" beforeDir="false" afterPath="$PROJECT_DIR$/root/lib/libc.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/root/lib/libtestutils.a" beforeDir="false" afterPath="$PROJECT_DIR$/root/lib/libtestutils.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/root/lib/libvm-funcs.a" beforeDir="false" afterPath="$PROJECT_DIR$/root/lib/libvm-funcs.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/root/sys161.conf" beforeDir="false" afterPath="$PROJECT_DIR$/root/sys161.conf" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -33,8 +44,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/os161-1.99/kern/thread/synch.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="383">
-              <caret line="123" lean-forward="true" selection-start-line="123" selection-end-line="123" />
+            <state relative-caret-position="112">
+              <caret line="53" column="11" selection-start-line="53" selection-start-column="11" selection-end-line="53" selection-end-column="11" />
             </state>
           </provider>
         </entry>
@@ -50,10 +61,17 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/os161-1.99/kern/thread/synch.c" />
+      </list>
+    </option>
+  </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="1" />
     <option name="y" value="23" />
-    <option name="width" value="1158" />
+    <option name="width" value="891" />
     <option name="height" value="949" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -123,18 +141,18 @@
       <option name="presentableId" value="Default" />
       <updated>1549217350138</updated>
       <workItem from="1549217354268" duration="257000" />
-      <workItem from="1549218355131" duration="2595000" />
+      <workItem from="1549218355131" duration="4318000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2852000" />
+    <option name="totallyTimeSpent" value="4575000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="24" y="215" width="1158" height="949" extended-state="0" />
+    <frame x="1" y="23" width="891" height="949" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.34139785" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.34139785" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -168,8 +186,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/os161-1.99/kern/thread/synch.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="383">
-          <caret line="123" lean-forward="true" selection-start-line="123" selection-end-line="123" />
+        <state relative-caret-position="112">
+          <caret line="53" column="11" selection-start-line="53" selection-start-column="11" selection-end-line="53" selection-end-column="11" />
         </state>
       </provider>
     </entry>

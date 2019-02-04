@@ -61,7 +61,7 @@ sem_create(const char *name, int initial_count)
                 kfree(sem);
                 return NULL;
         }
-
+    
 	sem->sem_wchan = wchan_create(sem->sem_name);
 	if (sem->sem_wchan == NULL) {
 		kfree(sem->sem_name);
@@ -172,7 +172,6 @@ lock_create(const char *name)
     }
 
     spinlock_init(&lock->lk_spinlock);
-        //sem->sem_count = initial_count;
         lock->lk_owner = NULL; // no one owns the lock at the very beginning
         return lock;
 }
@@ -195,7 +194,7 @@ lock_acquire(struct lock *lock)
 {
         // Write this
         KASSERT(!(lock_do_i_hold(lock))); // if I want to acquire the lock, I can not hold the lock before
-        KASSERT(curthread->t_in_interrupt == false); 
+    
         spinlock_acquire(&lock->lk_spinlock);
         while (!(lock->lk_owner == NULL)) {
             wchan_lock(lock->lk_wchan);
@@ -255,7 +254,14 @@ cv_create(const char *name)
         }
         
         // add stuff here as needed
-        
+    cv->cv_wchan = wchan_create(cv->cv_name);
+    if (cv->cv_wchan == NULL){
+        kfree(cv->cv_name);
+        kfree(cv);
+        return NULL;
+    }
+
+
         return cv;
 }
 
@@ -265,6 +271,7 @@ cv_destroy(struct cv *cv)
         KASSERT(cv != NULL);
 
         // add stuff here as needed
+        wchan_destroy(cv->cv_wchan);
         
         kfree(cv->cv_name);
         kfree(cv);
@@ -272,24 +279,33 @@ cv_destroy(struct cv *cv)
 
 void
 cv_wait(struct cv *cv, struct lock *lock)
-{
+{       
         // Write this
-        (void)cv;    // suppress warning until code gets written
-        (void)lock;  // suppress warning until code gets written
+        KASSERT(lock_do_i_hold(lock)); // I need to be the owner of the lock before release
+        wchan_lock(cv->cv_wchan);
+        lock_release(lock);
+        wchan_sleep(cv->cv_wchan);
+        lock_acquire(lock);
+        //(void)cv;    // suppress warning until code gets written
+        //(void)lock;  // suppress warning until code gets written
 }
 
 void
 cv_signal(struct cv *cv, struct lock *lock)
 {
         // Write this
-	(void)cv;    // suppress warning until code gets written
-	(void)lock;  // suppress warning until code gets written
+    KASSERT(lock_do_i_hold(lock)); // i need to be the owner of the lock, so that I can call thread_yield
+    wchan_wakeone(cv->cv_wchan);
+	//(void)cv;    // suppress warning until code gets written
+	//(void)lock;  // suppress warning until code gets written
 }
 
 void
 cv_broadcast(struct cv *cv, struct lock *lock)
 {
 	// Write this
-	(void)cv;    // suppress warning until code gets written
-	(void)lock;  // suppress warning until code gets written
+    KASSERT(lock_do_i_hold(lock));
+    wchan_wakeall(cv->cv_wchan);
+	//(void)cv;    // suppress warning until code gets written
+	//(void)lock;  // suppress warning until code gets written
 }

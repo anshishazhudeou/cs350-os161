@@ -1,0 +1,10 @@
+How to use:
+
+one core:
+python3 oneCoreTest.py sy2\;q oneCoreLogFileName.txt
+python3 oneCoreTest.py sy2\;q sy2OneCoreLog.txt
+
+multiple cores:
+1. cd cs350-os161/scripts.
+2. python3 test_script.py sy2\;q logFileName.txt
+
