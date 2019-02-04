@@ -11,3 +11,4 @@ with open(str(sys.argv[2]), "a+") as stdout:
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
             if (random.randint(1, int(total_iter/test_percent)+1) <= total_iter):
                 stdout.write(p.stdout if p.returncode == 0 else p.stderr)
+

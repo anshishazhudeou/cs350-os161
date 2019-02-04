@@ -3,6 +3,7 @@
 #include <synchprobs.h>
 #include <synch.h>
 #include <opt-A1.h>
+#include <array.h>
 
 /* 
  * This simple default synchronization mechanism allows only vehicle at a time
