@@ -154,7 +154,7 @@ lock_create(const char *name)
 
         lock = kmalloc(sizeof(struct lock));
         if (lock == NULL) {
-                return NULL;
+            return NULL;
         }
 
         lock->lk_name = kstrdup(name);
@@ -162,9 +162,18 @@ lock_create(const char *name)
                 kfree(lock);
                 return NULL;
         }
-        
+    
         // add stuff here as needed
-        
+    lock->lk_wchan = wchan_create(lock->lk_name);
+    if (lock->lk_wchan == NULL) {
+        kfree(lock->lk_name);
+        kfree(lock);
+        return NULL;
+    }
+
+    spinlock_init(&lock->lk_spinlock);
+        //sem->sem_count = initial_count;
+        lock->lk_owner = NULL; // no one owns the lock at the very beginning
         return lock;
 }
 
@@ -174,7 +183,9 @@ lock_destroy(struct lock *lock)
         KASSERT(lock != NULL);
 
         // add stuff here as needed
-        
+        /* wchan_cleanup will assert if anyone's waiting on it */
+        spinlock_cleanup(&lock->lk_spinlock);
+        wchan_destroy(lock->lk_wchan); // every resource(lock) has their own wchan
         kfree(lock->lk_name);
         kfree(lock);
 }
@@ -183,16 +194,31 @@ void
 lock_acquire(struct lock *lock)
 {
         // Write this
+        KASSERT(!(lock_do_i_hold(lock))); // if I want to acquire the lock, I can not hold the lock before
+        KASSERT(curthread->t_in_interrupt == false); 
+        spinlock_acquire(&lock->lk_spinlock);
+        while (!(lock->lk_owner == NULL)) {
+            wchan_lock(lock->lk_wchan);
+            spinlock_release(&lock->lk_spinlock);
+            wchan_sleep(lock->lk_wchan);
+            spinlock_acquire(&lock->lk_spinlock);
+        }
+        lock->lk_owner=curthread;  // set the owner of the lock to be current thread
+        spinlock_release(&lock->lk_spinlock);
 
-        (void)lock;  // suppress warning until code gets written
+        // (void)lock;  // suppress warning until code gets written
 }
 
 void
 lock_release(struct lock *lock)
 {
         // Write this
-
-        (void)lock;  // suppress warning until code gets written
+        KASSERT(lock_do_i_hold(lock)); // I need to be the owner of the lock
+        spinlock_acquire(&lock->lk_spinlock);
+        lock->lk_owner = NULL;
+        wchan_wakeone(lock->lk_wchan);
+        spinlock_release(&lock->lk_spinlock);
+        //(void)lock;  // suppress warning until code gets written
 }
 
 bool
@@ -200,9 +226,11 @@ lock_do_i_hold(struct lock *lock)
 {
         // Write this
 
-        (void)lock;  // suppress warning until code gets written
-
-        return true; // dummy until code gets written
+        KASSERT(!(lock == NULL));
+        KASSERT(!(curthread==NULL));
+        // (void)lock;  // suppress warning until code gets written
+        return (lock->lk_owner == curthread);
+        //return true; // dummy until code gets written
 }
 
 ////////////////////////////////////////////////////////////

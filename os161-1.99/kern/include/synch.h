@@ -76,6 +76,10 @@ struct lock {
         char *lk_name;
         // add what you need here
         // (don't forget to mark things volatile as needed)
+        struct wchan *lk_wchan;
+        struct spinlock lk_spinlock;
+        // we need one more field as compared to semaphore, the owner of the lock.
+        struct thread *lk_owner; 
 };
 
 struct lock *lock_create(const char *name);
