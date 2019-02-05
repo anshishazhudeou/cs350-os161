@@ -81,7 +81,7 @@ static bool areTwoVehiclesSafe(Vehicle *vehicle1,Vehicle *vehicle2){
     return true;
   } else if (vehicle1->origin == vehicle2->destination && vehicle1->destination == vehicle2->origin) {
     return true;
-  } else if ((vehicle1->destination != vehicle2->destination) && ((right_turn(vehicle1)) || (right_turn(vehicle2)))){
+  } else if ((vehicle1->destination != vehicle2->destination) && ((right_turn(vehicle1)) || (right_turn(vehicle2)))) {
     return true;
   }
   return false;
@@ -107,12 +107,12 @@ static bool canVehicleEnterIntersection(Vehicle *vehicle, struct array *vehicles
   // check if the vehicle violate rules against any vehicle at the intersection (critical section)
   for (unsigned int i = 0; i < lengthOfArray; ++i) {
     Vehicle *vehicleAtIntersection = array_get(vehiclesAtIntersection,i);
-    if (areTwoVehiclesSafe(vehicle, vehicleAtIntersection)) {
-      return true;
+    if (!(areTwoVehiclesSafe(vehicle, vehicleAtIntersection))) {
+      return false;
     }
   }
 
-  return false;
+  return true;
 }
 
 
@@ -197,15 +197,20 @@ intersection_before_entry(Direction origin, Direction destination) {
   vehicle->origin = origin;
   vehicle->destination=destination;
 
+  kprintf("before acuqire lock\n");
   lock_acquire(intersectionLock);
+  kprintf("after acuqire lock\n");
   while (!(canVehicleEnterIntersection(vehicle, vehiclesAtIntersection))) {
+    kprintf("before cv_wait\n");
     cv_wait(intersectionCv, intersectionLock);
+    kprintf("after cv_wait\n");
   }
 
   // add vehicle to the vehiclesAtIntersection
   array_add(vehiclesAtIntersection, vehicle, NULL);
-
+  //kprintf("before lock_release\n");
   lock_release(intersectionLock);
+  //kprintf("after lock_release\n");
 
 }
 
@@ -215,7 +220,7 @@ intersection_before_entry(Direction origin, Direction destination) {
  * leaves the intersection.
  *
  * parameters:
- *    * origin: the Direction from whi   ch the vehicle arrived
+ *    * origin: the Direction from which the vehicle arrived
  *    * destination: the Direction in which the vehicle is going
  *
  * return value: none
@@ -225,9 +230,15 @@ void
 intersection_after_exit(Direction origin, Direction destination) {
   KASSERT(!(intersectionLock == NULL));
   KASSERT(!(intersectionCv == NULL));
+  //kprintf("before intersection_after_exit lock_acquire\n");
   lock_acquire(intersectionLock);
+  //kprintf("after intersection_after_exit lock_acquire\n");
   removeVehicleFromIntersection(origin, destination, vehiclesAtIntersection);
+  //kprintf("before intersection_after_exit cv_broadcast\n");
   cv_broadcast(intersectionCv, intersectionLock);
+  //kprintf("after intersection_after_exit cv_broadcast\n");
+  //kprintf("before intersection_after_exit lock_release\n");
   lock_release(intersectionLock);
+  //kprintf("after intersection_after_exit lock_release\n");
 
 }

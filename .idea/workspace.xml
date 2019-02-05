@@ -9,20 +9,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2f37d654-f11e-4072-b245-572dcbb12333" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/os161-1.99/build/install/lib/libc.a" beforeDir="false" afterPath="$PROJECT_DIR$/os161-1.99/build/install/lib/libc.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/os161-1.99/build/install/lib/libtestutils.a" beforeDir="false" afterPath="$PROJECT_DIR$/os161-1.99/build/install/lib/libtestutils.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/os161-1.99/build/install/lib/libvm-funcs.a" beforeDir="false" afterPath="$PROJECT_DIR$/os161-1.99/build/install/lib/libvm-funcs.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/os161-1.99/build/user/lib/libc/libc.a" beforeDir="false" afterPath="$PROJECT_DIR$/os161-1.99/build/user/lib/libc/libc.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/os161-1.99/build/user/uw-testbin/lib/libtestutils.a" beforeDir="false" afterPath="$PROJECT_DIR$/os161-1.99/build/user/uw-testbin/lib/libtestutils.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/os161-1.99/build/user/uw-testbin/vm-funcs/libvm-funcs.a" beforeDir="false" afterPath="$PROJECT_DIR$/os161-1.99/build/user/uw-testbin/vm-funcs/libvm-funcs.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/os161-1.99/kern/include/synch.h" beforeDir="false" afterPath="$PROJECT_DIR$/os161-1.99/kern/include/synch.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/root/lib/libc.a" beforeDir="false" afterPath="$PROJECT_DIR$/root/lib/libc.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/root/lib/libtestutils.a" beforeDir="false" afterPath="$PROJECT_DIR$/root/lib/libtestutils.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/root/lib/libvm-funcs.a" beforeDir="false" afterPath="$PROJECT_DIR$/root/lib/libvm-funcs.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/root/sys161.conf" beforeDir="false" afterPath="$PROJECT_DIR$/root/sys161.conf" afterDir="false" />
-    </list>
+    <list default="true" id="2f37d654-f11e-4072-b245-572dcbb12333" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +54,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="1">
     <option name="x" value="1" />
     <option name="y" value="23" />
     <option name="width" value="891" />
@@ -140,15 +127,15 @@
       <option name="presentableId" value="Default" />
       <updated>1549217350138</updated>
       <workItem from="1549217354268" duration="257000" />
-      <workItem from="1549218355131" duration="4646000" />
+      <workItem from="1549218355131" duration="4909000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4903000" />
+    <option name="totallyTimeSpent" value="5166000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1" y="23" width="891" height="949" extended-state="0" />
+    <frame x="1" y="23" width="891" height="949" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.34139785" />
