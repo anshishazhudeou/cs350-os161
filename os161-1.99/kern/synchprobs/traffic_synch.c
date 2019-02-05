@@ -44,8 +44,8 @@ struct array *vehiclesAtIntersection;
 // function defined and use internally
 static bool right_turn(Vehicle *vehicle);
 static bool areTwoVehiclesSafe(Vehicle *vehicle1,Vehicle *vehicle2);
-static bool canVehicleEnterIntersection(Vehicle *vehicle, struct array *vehiclesAtIntersection);
-static void removeVehicleFromIntersection(Direction origin, Direction destination, struct array *vehiclesAtIntersection);
+static bool canVehicleEnterIntersection(Vehicle *vehicle);
+static void removeVehicleFromIntersection(Direction origin, Direction destination);
 /*
  * bool right_turn()
  * 
@@ -101,7 +101,7 @@ static bool areTwoVehiclesSafe(Vehicle *vehicle1,Vehicle *vehicle2){
     true if the vehicle can enter the intersection, else false
 */
 
-static bool canVehicleEnterIntersection(Vehicle *vehicle, struct array *vehiclesAtIntersection) {
+static bool canVehicleEnterIntersection(Vehicle *vehicle) {
   unsigned int lengthOfArray = array_num(vehiclesAtIntersection);
 
   // check if the vehicle violate rules against any vehicle at the intersection (critical section)
@@ -117,14 +117,15 @@ static bool canVehicleEnterIntersection(Vehicle *vehicle, struct array *vehicles
 
 
 
-static void removeVehicleFromIntersection(Direction origin, Direction destination, struct array *vehiclesAtIntersection) {
+static void removeVehicleFromIntersection(Direction origin, Direction destination) {
   unsigned int lengthOfArray = array_num(vehiclesAtIntersection);
   for (unsigned int i = 0; i < lengthOfArray; ++i) {
     Vehicle *vehicleAtIntersection = array_get(vehiclesAtIntersection,i);
     if ((origin == vehicleAtIntersection->origin) && (destination == vehicleAtIntersection->destination)){
       array_remove(vehiclesAtIntersection, i);
+      break;
     }
-    break;
+    
   }
 }
 
@@ -197,13 +198,13 @@ intersection_before_entry(Direction origin, Direction destination) {
   vehicle->origin = origin;
   vehicle->destination=destination;
 
-  kprintf("before acuqire lock\n");
+  //kprintf("before acuqire lock\n");
   lock_acquire(intersectionLock);
-  kprintf("after acuqire lock\n");
-  while (!(canVehicleEnterIntersection(vehicle, vehiclesAtIntersection))) {
-    kprintf("before cv_wait\n");
+  //kprintf("after acuqire lock\n");
+  while (!(canVehicleEnterIntersection(vehicle))) {
+    //kprintf("before cv_wait\n");
     cv_wait(intersectionCv, intersectionLock);
-    kprintf("after cv_wait\n");
+    //kprintf("after cv_wait\n");
   }
 
   // add vehicle to the vehiclesAtIntersection
@@ -233,7 +234,7 @@ intersection_after_exit(Direction origin, Direction destination) {
   //kprintf("before intersection_after_exit lock_acquire\n");
   lock_acquire(intersectionLock);
   //kprintf("after intersection_after_exit lock_acquire\n");
-  removeVehicleFromIntersection(origin, destination, vehiclesAtIntersection);
+  removeVehicleFromIntersection(origin, destination);
   //kprintf("before intersection_after_exit cv_broadcast\n");
   cv_broadcast(intersectionCv, intersectionLock);
   //kprintf("after intersection_after_exit cv_broadcast\n");
