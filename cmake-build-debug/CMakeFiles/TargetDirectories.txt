@@ -1,0 +1,3 @@
+/Users/liangzhou/Documents/cs350-os161/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/liangzhou/Documents/cs350-os161/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/liangzhou/Documents/cs350-os161/cmake-build-debug/CMakeFiles/cs350_os161.dir
