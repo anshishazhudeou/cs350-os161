@@ -12,7 +12,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="519d9b71-33e4-4712-81fe-d9645ebd543e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/os161-1.99/kern/startup/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/os161-1.99/kern/startup/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -23,7 +23,36 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/os161-1.99/kern/syscall/proc_syscalls.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="73">
+              <caret line="14" lean-forward="true" selection-start-line="12" selection-start-column="5" selection-end-line="14" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/os161-1.99/kern/arch/mips/locore/trap.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2147" />
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/os161-1.99/kern/arch/mips/vm/dumbvm.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="212">
+              <caret line="257" selection-start-line="257" selection-end-line="257" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -38,7 +67,7 @@
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="-1939" />
+    <option name="x" value="-1920" />
     <option name="y" value="23" />
     <option name="width" value="1920" />
     <option name="height" value="989" />
@@ -74,7 +103,31 @@
               <item name="cs350-os161" type="462c0819:PsiDirectoryNode" />
               <item name="os161-1.99" type="462c0819:PsiDirectoryNode" />
               <item name="kern" type="462c0819:PsiDirectoryNode" />
-              <item name="startup" type="462c0819:PsiDirectoryNode" />
+              <item name="arch" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="cs350_os161" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cs350-os161" type="462c0819:PsiDirectoryNode" />
+              <item name="os161-1.99" type="462c0819:PsiDirectoryNode" />
+              <item name="kern" type="462c0819:PsiDirectoryNode" />
+              <item name="arch" type="462c0819:PsiDirectoryNode" />
+              <item name="mips" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="cs350_os161" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cs350-os161" type="462c0819:PsiDirectoryNode" />
+              <item name="os161-1.99" type="462c0819:PsiDirectoryNode" />
+              <item name="kern" type="462c0819:PsiDirectoryNode" />
+              <item name="arch" type="462c0819:PsiDirectoryNode" />
+              <item name="mips" type="462c0819:PsiDirectoryNode" />
+              <item name="locore" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="cs350_os161" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cs350-os161" type="462c0819:PsiDirectoryNode" />
+              <item name="os161-1.99" type="462c0819:PsiDirectoryNode" />
+              <item name="kern" type="462c0819:PsiDirectoryNode" />
+              <item name="syscall" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -126,15 +179,16 @@
       <workItem from="1552283659162" duration="83000" />
       <workItem from="1552283754218" duration="207000" />
       <workItem from="1552284046905" duration="846000" />
-      <workItem from="1552284925543" duration="2906000" />
+      <workItem from="1552284925543" duration="3477000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="7953000" />
+    <option name="totallyTimeSpent" value="8524000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1939" y="23" width="1920" height="989" extended-state="0" />
+    <frame x="-1920" y="23" width="1920" height="989" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27103302" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -256,6 +310,38 @@
         <state relative-caret-position="166">
           <caret line="22" column="21" lean-forward="true" selection-start-line="22" selection-start-column="21" selection-end-line="22" selection-end-column="21" />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/os161-1.99/kern/syscall/file_syscalls.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-46">
+          <caret line="14" column="22" lean-forward="true" selection-start-line="14" selection-start-column="4" selection-end-line="14" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/os161-1.99/kern/arch/mips/vm/dumbvm.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="212">
+          <caret line="257" selection-start-line="257" selection-end-line="257" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/os161-1.99/kern/syscall/proc_syscalls.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="73">
+          <caret line="14" lean-forward="true" selection-start-line="12" selection-start-column="5" selection-end-line="14" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/os161-1.99/kern/arch/mips/locore/trap.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2147" />
       </provider>
     </entry>
   </component>
