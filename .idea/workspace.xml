@@ -24,35 +24,26 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/os161-1.99/kern/syscall/proc_syscalls.c">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/os161-1.99/user/include/unistd.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="73">
-              <caret line="14" lean-forward="true" selection-start-line="12" selection-start-column="5" selection-end-line="14" />
+            <state relative-caret-position="206">
+              <caret line="38" column="3" lean-forward="true" selection-start-line="38" selection-start-column="3" selection-end-line="38" selection-end-column="3" />
               <folding>
-                <element signature="e#0#18#0" expanded="true" />
+                <element signature="e#1845#1868#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/os161-1.99/kern/arch/mips/locore/trap.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2147" />
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/os161-1.99/kern/arch/mips/vm/dumbvm.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="212">
-              <caret line="257" selection-start-line="257" selection-end-line="257" />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>mips_userm</find>
+      <find>copyin(</find>
+      <find>waitpid</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -80,6 +71,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -92,48 +84,10 @@
               <item name="cs350-os161" type="462c0819:PsiDirectoryNode" />
               <item name="os161-1.99" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="cs350_os161" type="b2602c69:ProjectViewProjectNode" />
-              <item name="cs350-os161" type="462c0819:PsiDirectoryNode" />
-              <item name="os161-1.99" type="462c0819:PsiDirectoryNode" />
-              <item name="kern" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="cs350_os161" type="b2602c69:ProjectViewProjectNode" />
-              <item name="cs350-os161" type="462c0819:PsiDirectoryNode" />
-              <item name="os161-1.99" type="462c0819:PsiDirectoryNode" />
-              <item name="kern" type="462c0819:PsiDirectoryNode" />
-              <item name="arch" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="cs350_os161" type="b2602c69:ProjectViewProjectNode" />
-              <item name="cs350-os161" type="462c0819:PsiDirectoryNode" />
-              <item name="os161-1.99" type="462c0819:PsiDirectoryNode" />
-              <item name="kern" type="462c0819:PsiDirectoryNode" />
-              <item name="arch" type="462c0819:PsiDirectoryNode" />
-              <item name="mips" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="cs350_os161" type="b2602c69:ProjectViewProjectNode" />
-              <item name="cs350-os161" type="462c0819:PsiDirectoryNode" />
-              <item name="os161-1.99" type="462c0819:PsiDirectoryNode" />
-              <item name="kern" type="462c0819:PsiDirectoryNode" />
-              <item name="arch" type="462c0819:PsiDirectoryNode" />
-              <item name="mips" type="462c0819:PsiDirectoryNode" />
-              <item name="locore" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="cs350_os161" type="b2602c69:ProjectViewProjectNode" />
-              <item name="cs350-os161" type="462c0819:PsiDirectoryNode" />
-              <item name="os161-1.99" type="462c0819:PsiDirectoryNode" />
-              <item name="kern" type="462c0819:PsiDirectoryNode" />
-              <item name="syscall" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -179,18 +133,18 @@
       <workItem from="1552283659162" duration="83000" />
       <workItem from="1552283754218" duration="207000" />
       <workItem from="1552284046905" duration="846000" />
-      <workItem from="1552284925543" duration="3477000" />
+      <workItem from="1552284925543" duration="6194000" />
+      <workItem from="1552785595700" duration="370000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="8524000" />
+    <option name="totallyTimeSpent" value="11611000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1920" y="23" width="1920" height="989" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27103302" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2736954" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -201,9 +155,9 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="File Transfer" order="8" visible="true" weight="0.2575251" />
+      <window_info anchor="bottom" id="File Transfer" order="8" weight="0.2575251" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.32998884" />
+      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.32998884" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="bottom" id="CMake" order="12" weight="0.39687848" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -322,13 +276,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/os161-1.99/kern/arch/mips/vm/dumbvm.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="257" selection-start-line="257" selection-end-line="257" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/os161-1.99/kern/syscall/proc_syscalls.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="73">
@@ -341,7 +288,73 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/os161-1.99/kern/arch/mips/locore/trap.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2147" />
+        <state relative-caret-position="196">
+          <caret line="359" column="13" selection-start-line="359" selection-start-column="3" selection-end-line="359" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/os161-1.99/kern/vm/copyinout.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="152" column="7" selection-start-line="152" selection-end-line="152" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/os161-1.99/kern/include/kern/wait.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="49" column="68" lean-forward="true" selection-start-line="49" selection-start-column="68" selection-end-line="49" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/os161-1.99/man/syscall/fork.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/os161-1.99/kern/include/syscall.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="29" column="9" lean-forward="true" selection-start-line="29" selection-start-column="9" selection-end-line="29" selection-end-column="9" />
+          <folding>
+            <element signature="e#2233#2440#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/os161-1.99/kern/include/kern/syscall.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-518" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/os161-1.99/kern/arch/mips/syscall/syscall.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="51" column="2" selection-start-line="51" selection-start-column="2" selection-end-line="51" selection-end-column="2" />
+          <folding>
+            <element signature="e#1616#1634#0" expanded="true" />
+            <element signature="e#4218#4732#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/os161-1.99/kern/arch/mips/vm/dumbvm.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="212">
+          <caret line="257" selection-start-line="257" selection-end-line="257" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/os161-1.99/user/include/unistd.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="206">
+          <caret line="38" column="3" lean-forward="true" selection-start-line="38" selection-start-column="3" selection-end-line="38" selection-end-column="3" />
+          <folding>
+            <element signature="e#1845#1868#0" expanded="true" />
+          </folding>
+        </state>
       </provider>
     </entry>
   </component>
