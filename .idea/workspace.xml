@@ -12,7 +12,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="519d9b71-33e4-4712-81fe-d9645ebd543e" name="Default Changelist" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/os161-1.99/kern/startup/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/os161-1.99/kern/startup/main.c" afterDir="false" />
+>>>>>>> 0cabc26... Revert "Revert "no message""
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -23,6 +27,7 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
+<<<<<<< HEAD
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/os161-1.99/user/include/unistd.h">
@@ -37,6 +42,9 @@
         </entry>
       </file>
     </leaf>
+=======
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+>>>>>>> 0cabc26... Revert "Revert "no message""
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -133,16 +141,27 @@
       <workItem from="1552283659162" duration="83000" />
       <workItem from="1552283754218" duration="207000" />
       <workItem from="1552284046905" duration="846000" />
+<<<<<<< HEAD
       <workItem from="1552284925543" duration="6194000" />
       <workItem from="1552785595700" duration="370000" />
+=======
+      <workItem from="1552284925543" duration="2906000" />
+>>>>>>> 0cabc26... Revert "Revert "no message""
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< HEAD
     <option name="totallyTimeSpent" value="11611000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1920" y="23" width="1920" height="989" extended-state="0" />
+=======
+    <option name="totallyTimeSpent" value="7953000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-1939" y="23" width="1920" height="989" extended-state="0" />
+>>>>>>> 0cabc26... Revert "Revert "no message""
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2736954" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -239,6 +258,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/os161-1.99/kern/lib/kprintf.c">
+<<<<<<< HEAD
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="212">
           <caret line="93" selection-start-line="93" selection-end-line="93" />
@@ -277,6 +297,8 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/os161-1.99/kern/syscall/proc_syscalls.c">
+=======
+>>>>>>> 0cabc26... Revert "Revert "no message""
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="73">
           <caret line="14" lean-forward="true" selection-start-line="12" selection-start-column="5" selection-end-line="14" />
@@ -349,11 +371,23 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/os161-1.99/user/include/unistd.h">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="206">
           <caret line="38" column="3" lean-forward="true" selection-start-line="38" selection-start-column="3" selection-end-line="38" selection-end-column="3" />
           <folding>
             <element signature="e#1845#1868#0" expanded="true" />
           </folding>
+=======
+        <state relative-caret-position="1033">
+          <caret line="466" column="13" lean-forward="true" selection-start-line="466" selection-start-column="13" selection-end-line="466" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/os161-1.99/kern/startup/main.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="166">
+          <caret line="22" column="21" lean-forward="true" selection-start-line="22" selection-start-column="21" selection-end-line="22" selection-end-column="21" />
+>>>>>>> 0cabc26... Revert "Revert "no message""
         </state>
       </provider>
     </entry>
