@@ -38,6 +38,7 @@
 
 #include <spinlock.h>
 #include <thread.h> /* required for struct threadarray */
+#include <opt-A2.h>
 
 struct addrspace;
 struct vnode;
@@ -69,7 +70,40 @@ struct proc {
 #endif
 
 	/* add more material here as needed */
+#if OPT_A2
+    pid_t pid;
+#endif
 };
+
+#if OPT_A2
+
+#ifndef PROCINLINE
+#define PROCINLINE INLINE
+#endif
+
+enum state_t {
+    RUNNING,
+    ZOMBIE,
+    EXITED,
+};
+
+struct procinfo {
+    pid_t pid;
+    pid_t ppid;
+    int exit_status;
+    enum state_t state;
+};
+
+DECLARRAY(procinfo);
+DEFARRAY(procinfo, PROCINLINE);
+struct procinfoarray *procinfolist;
+struct lock *procinfolist_lock;
+struct cv *procinfolist_cv;
+
+struct procinfo *procinfoarray_get_by_pid(struct procinfoarray *pa, pid_t pid);
+void procinfoarray_remove_by_pid(struct procinfoarray *pa, pid_t pid);
+
+#endif
 
 /* This is the process structure for the kernel and for kernel-only threads. */
 extern struct proc *kproc;

@@ -68,25 +68,25 @@ dofork(void)
  * the pid into the data segment and read it back repeatedly, making
  * sure it's correct every time.
  */
-static
-void
-check(void)
-{
-	int i;
-
-	mypid = getpid();
-	
-	/* Make sure each fork has its own address space. */
-	for (i=0; i<800; i++) {
-		volatile int seenpid;
-		seenpid = mypid;
-		if (seenpid != getpid()) {
-			errx(1, "pid mismatch (%d, should be %d) "
-			     "- your vm is broken!", 
-			     seenpid, getpid());
-		}
-	}
-}
+//static
+//void
+//check(void)
+//{
+//	int i;
+//
+//	mypid = getpid();
+//	
+//	/* Make sure each fork has its own address space. */
+//	for (i=0; i<800; i++) {
+//		volatile int seenpid;
+//		seenpid = mypid;
+//		if (seenpid != getpid()) {
+//			errx(1, "pid mismatch (%d, should be %d) "
+//			     "- your vm is broken!", 
+//			     seenpid, getpid());
+//		}
+//	}
+//}
 
 /*
  * Wait for a child process.
@@ -143,16 +143,16 @@ test(int nowait)
 
 	pid0 = dofork();
 	putchar('0');
-	check();
+	//check();
 	pid1 = dofork();
 	putchar('1');
-	check();
+	//check();
 	pid2 = dofork();
 	putchar('2');
-	check();
+	//check();
 	pid3 = dofork();
 	putchar('3');
-	check();
+	//check();
 
 	/*
 	 * These must be called in reverse order to avoid waiting
