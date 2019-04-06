@@ -30,7 +30,7 @@
 /*
  * Main.
  */
-/*bull*/
+
 #include <types.h>
 #include <kern/errno.h>
 #include <kern/reboot.h>
@@ -48,7 +48,7 @@
 #include <device.h>
 #include <syscall.h>
 #include <test.h>
-#include <version.h>cd
+#include <version.h>
 #include "autoconf.h"  // for pseudoconfig
 
 

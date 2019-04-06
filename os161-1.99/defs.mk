@@ -14,6 +14,7 @@
 #
 
 OSTREE=/u8/l62zhou/cs350-os161/root
+#OSTREE=/home/cs350/cs350-os161/root
 PLATFORM=sys161
 MACHINE=mips
 COMPAT_CFLAGS=

@@ -42,6 +42,8 @@
  * process that will have more than one thread is the kernel process.
  */
 
+#define PROCINLINE
+
 #include <types.h>
 #include <proc.h>
 #include <current.h>
@@ -70,6 +72,31 @@ struct semaphore *no_proc_sem;
 #endif  // UW
 
 
+#if OPT_A2
+
+struct procinfo *procinfoarray_get_by_pid(struct procinfoarray *pa, pid_t pid) {
+    unsigned size = procinfoarray_num(pa);
+    for (unsigned i=0; i<size; ++i) {
+        struct procinfo *p = procinfoarray_get(pa, i);
+        if (pid == p->pid) {
+            return p;
+        }
+    }
+    return NULL;
+}
+
+void procinfoarray_remove_by_pid(struct procinfoarray *pa, pid_t pid) {
+    unsigned size = procinfoarray_num(pa);
+    for (unsigned i=0; i<size; ++i) {
+        struct procinfo *p = procinfoarray_get(pa, i);
+        if (pid == p->pid) {
+            procinfoarray_remove(pa, i);
+            break;
+        }
+    }
+}
+
+#endif
 
 /*
  * Create a proc structure.
@@ -270,6 +297,53 @@ proc_create_runprogram(const char *name)
 	proc_count++;
 	V(proc_count_mutex);
 #endif // UW
+
+#if OPT_A2
+    if (!procinfolist_lock) {
+        procinfolist_lock = lock_create("procinfolist_lock");
+    }
+
+    lock_acquire(procinfolist_lock);
+
+    if (!procinfolist) {
+        procinfolist = procinfoarray_create();
+    }
+
+    // find minimum used pid
+    unsigned size = procinfoarray_num(procinfolist);
+    char *used = (char *)kmalloc(size*sizeof(char));
+    for (unsigned i=0; i<size; ++i) {
+        used[i] = 0;
+    }
+    for (unsigned i=0; i<size; ++i) {
+        pid_t pid = procinfoarray_get(procinfolist, i)->pid;
+        if (0 <= pid && pid < (int)size) {
+            used[pid] = 1;
+        }
+    }
+    unsigned min_unsed = size;
+    for (unsigned i=0; i<size; ++i) {
+        if (!used[i]) {
+            min_unsed = i;
+            break;
+        }
+    }
+    kfree(used);
+
+    proc->pid = min_unsed;
+
+    struct procinfo *pi = (struct procinfo *)kmalloc(sizeof(struct procinfo));
+
+    pi->pid = proc->pid;
+    pi->ppid = -1;
+    pi->exit_status = 0;
+    pi->state = RUNNING;
+
+    unsigned index;
+    procinfoarray_add(procinfolist, pi, &index);
+
+    lock_release(procinfolist_lock);
+#endif
 
 	return proc;
 }
