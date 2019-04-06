@@ -60,6 +60,6 @@ OS/161 Manual
 https://www.student.cs.uwaterloo.ca/~cs350/common/os161-man/
 
 
-
+sys161 kernel "p uw-testbin/argtesttest 哈哈;q"
 
 
