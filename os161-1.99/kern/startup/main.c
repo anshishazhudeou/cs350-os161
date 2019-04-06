@@ -48,7 +48,7 @@
 #include <device.h>
 #include <syscall.h>
 #include <test.h>
-#include <version.h>cd
+#include <version.h>
 #include "autoconf.h"  // for pseudoconfig
 
 

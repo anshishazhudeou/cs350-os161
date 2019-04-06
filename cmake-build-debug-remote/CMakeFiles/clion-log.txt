@@ -1,3 +1,4 @@
-/usr/bin/cmake -DCMAKE_BUILD_TYPE=Release -G "CodeBlocks - Unix Makefiles" /u8/l62zhou/cs350-os161
-CMake Error: The source directory "/u8/l62zhou/cs350-os161" does not appear to contain CMakeLists.txt.
-Specify --help for usage, or press the help button on the CMake GUI.
+Cannot generate into /Users/liangzhou/Documents/cs350-os161/cmake-build-debug-remote
+Cannot create directory
+
+Please either delete it manually or select another generation directory
