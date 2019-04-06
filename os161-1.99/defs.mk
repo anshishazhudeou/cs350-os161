@@ -13,8 +13,8 @@
 # The things that can be set here are documented in mk/os161.config.mk.
 #
 
-#OSTREE=/u8/l62zhou/cs350-os161/root
-OSTREE=/home/cs350/cs350-os161/root
+OSTREE=/u8/l62zhou/cs350-os161/root
+#OSTREE=/home/cs350/cs350-os161/root
 PLATFORM=sys161
 MACHINE=mips
 COMPAT_CFLAGS=

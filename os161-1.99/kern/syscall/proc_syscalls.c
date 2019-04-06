@@ -2,15 +2,17 @@
 #include <kern/errno.h>
 #include <kern/unistd.h>
 #include <kern/wait.h>
+#include <kern/fcntl.h>
 #include <lib.h>
+#include <limits.h>
 #include <syscall.h>
 #include <current.h>
 #include <proc.h>
 #include <thread.h>
 #include <addrspace.h>
 #include <copyinout.h>
-
 #include <mips/trapframe.h>
+#include <vfs.h>
 #include <synch.h>
 #include <opt-A2.h>
 
