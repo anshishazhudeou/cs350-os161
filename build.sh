@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd /u8/l62zhou/cs350-os161/os161-1.99/kern/compile/ASST2
+cd /u8/l62zhou/cs350-os161/os161-1.99/kern/compile/ASST3
 
 echo "$(tput setaf 4)$(tput setab 7)******bmake depend*******$(tput sgr 0)"
 bmake depend >/dev/null
