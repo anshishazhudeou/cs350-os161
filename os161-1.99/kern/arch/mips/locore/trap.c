@@ -110,7 +110,6 @@ kill_curthread(vaddr_t epc, unsigned code, vaddr_t vaddr) {
 			sig = SIGFPE;
 			break;
 	}
-
 	/*
 	 * You will probably want to change this.
 	 */
@@ -173,9 +172,10 @@ kill_curthread(vaddr_t epc, unsigned code, vaddr_t vaddr) {
       // assumption: no multi child
       for (unsigned i=0; i<size; ++i) {
       	struct procinfo *pi = procinfoarray_get(procinfolist, i);
-      	if (pi->ppid == pid && pi->state == ZOMBIE) {
+      	if (pi->ppid == pid) {
       		pi->state = EXITED;
       		procinfoarray_remove(procinfolist, i);
+
       	}
       }
       lock_release(procinfolist_lock);
@@ -184,7 +184,6 @@ kill_curthread(vaddr_t epc, unsigned code, vaddr_t vaddr) {
 
 
 #else
-
 	kprintf("Fatal user mode trap %u sig %d (%s, epc 0x%x, vaddr 0x%x)\n",
 		code, sig, trapcodenames[code], epc, vaddr);
 	panic("I don't know how to handle this\n");
