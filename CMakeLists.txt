@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5.1)
+cmake_minimum_required(VERSION 3.13)
 project(cs350_os161 C)
 
 set(CMAKE_C_STANDARD 11)
@@ -6,14 +6,9 @@ set(CMAKE_C_STANDARD 11)
 include_directories(os161-1.99/build)
 include_directories(os161-1.99/build/install)
 include_directories(os161-1.99/build/install/hostinclude)
-include_directories(os161-1.99/build/install/hostinclude/kern)
-include_directories(os161-1.99/build/install/hostinclude/kern/machine)
-include_directories(os161-1.99/build/install/hostinclude/kern/mips)
 include_directories(os161-1.99/build/install/include)
 include_directories(os161-1.99/build/install/include/kern)
-include_directories(os161-1.99/build/install/include/kern/machine)
 include_directories(os161-1.99/build/install/include/kern/mips)
-include_directories(os161-1.99/build/install/include/machine)
 include_directories(os161-1.99/build/install/include/sys)
 include_directories(os161-1.99/build/install/include/types)
 include_directories(os161-1.99/common/gcc-millicode)
@@ -22,17 +17,9 @@ include_directories(os161-1.99/kern/arch/mips/include/kern)
 include_directories(os161-1.99/kern/arch/mips/thread)
 include_directories(os161-1.99/kern/arch/sys161/include)
 include_directories(os161-1.99/kern/compile/ASST0)
-include_directories(os161-1.99/kern/compile/ASST0/includelinks)
-include_directories(os161-1.99/kern/compile/ASST0/includelinks/kern)
-include_directories(os161-1.99/kern/compile/ASST0/includelinks/kern/machine)
-include_directories(os161-1.99/kern/compile/ASST0/includelinks/kern/mips)
-include_directories(os161-1.99/kern/compile/ASST0/includelinks/machine)
-include_directories(os161-1.99/kern/compile/ASST0/includelinks/machine/kern)
-include_directories(os161-1.99/kern/compile/ASST0/includelinks/mips)
-include_directories(os161-1.99/kern/compile/ASST0/includelinks/mips/kern)
-include_directories(os161-1.99/kern/compile/ASST0/includelinks/platform)
-include_directories(os161-1.99/kern/compile/ASST0/includelinks/sys161)
 include_directories(os161-1.99/kern/compile/ASST1)
+include_directories(os161-1.99/kern/compile/ASST2)
+include_directories(os161-1.99/kern/compile/ASST3)
 include_directories(os161-1.99/kern/dev/generic)
 include_directories(os161-1.99/kern/dev/lamebus)
 include_directories(os161-1.99/kern/include)
@@ -51,23 +38,13 @@ include_directories(os161-1.99/user/testbin/triplesort)
 include_directories(os161-1.99/user/uw-testbin/lib)
 include_directories(root)
 include_directories(root/hostinclude)
-include_directories(root/hostinclude/kern)
-include_directories(root/hostinclude/kern/machine)
-include_directories(root/hostinclude/kern/mips)
 include_directories(root/include)
 include_directories(root/include/kern)
-include_directories(root/include/kern/machine)
 include_directories(root/include/kern/mips)
-include_directories(root/include/machine)
 include_directories(root/include/sys)
 include_directories(root/include/types)
 
 add_executable(cs350_os161
-        os161-1.99/build/install/hostinclude/kern/mips/endian.h
-        os161-1.99/build/install/hostinclude/kern/mips/regdefs.h
-        os161-1.99/build/install/hostinclude/kern/mips/setjmp.h
-        os161-1.99/build/install/hostinclude/kern/mips/signal.h
-        os161-1.99/build/install/hostinclude/kern/mips/types.h
         os161-1.99/build/install/hostinclude/hostcompat.h
         os161-1.99/build/install/include/kern/mips/endian.h
         os161-1.99/build/install/include/kern/mips/regdefs.h
@@ -174,16 +151,6 @@ add_executable(cs350_os161
         os161-1.99/kern/arch/sys161/dev/lamebus_machdep.c
         os161-1.99/kern/arch/sys161/include/bus.h
         os161-1.99/kern/arch/sys161/include/maxcpus.h
-        os161-1.99/kern/compile/ASST0/includelinks/machine/kern/endian.h
-        os161-1.99/kern/compile/ASST0/includelinks/machine/kern/regdefs.h
-        os161-1.99/kern/compile/ASST0/includelinks/machine/kern/setjmp.h
-        os161-1.99/kern/compile/ASST0/includelinks/machine/kern/signal.h
-        os161-1.99/kern/compile/ASST0/includelinks/machine/kern/types.h
-        os161-1.99/kern/compile/ASST0/includelinks/mips/kern/endian.h
-        os161-1.99/kern/compile/ASST0/includelinks/mips/kern/regdefs.h
-        os161-1.99/kern/compile/ASST0/includelinks/mips/kern/setjmp.h
-        os161-1.99/kern/compile/ASST0/includelinks/mips/kern/signal.h
-        os161-1.99/kern/compile/ASST0/includelinks/mips/kern/types.h
         os161-1.99/kern/compile/ASST0/autoconf.c
         os161-1.99/kern/compile/ASST0/autoconf.h
         os161-1.99/kern/compile/ASST0/opt-A0.h
@@ -214,6 +181,36 @@ add_executable(cs350_os161
         os161-1.99/kern/compile/ASST1/opt-sfs.h
         os161-1.99/kern/compile/ASST1/opt-synchprobs.h
         os161-1.99/kern/compile/ASST1/vers.c
+        os161-1.99/kern/compile/ASST2/autoconf.c
+        os161-1.99/kern/compile/ASST2/autoconf.h
+        os161-1.99/kern/compile/ASST2/opt-A0.h
+        os161-1.99/kern/compile/ASST2/opt-A1.h
+        os161-1.99/kern/compile/ASST2/opt-A2.h
+        os161-1.99/kern/compile/ASST2/opt-A3.h
+        os161-1.99/kern/compile/ASST2/opt-A4.h
+        os161-1.99/kern/compile/ASST2/opt-A5.h
+        os161-1.99/kern/compile/ASST2/opt-dumbvm.h
+        os161-1.99/kern/compile/ASST2/opt-net.h
+        os161-1.99/kern/compile/ASST2/opt-netfs.h
+        os161-1.99/kern/compile/ASST2/opt-noasserts.h
+        os161-1.99/kern/compile/ASST2/opt-sfs.h
+        os161-1.99/kern/compile/ASST2/opt-synchprobs.h
+        os161-1.99/kern/compile/ASST2/vers.c
+        os161-1.99/kern/compile/ASST3/autoconf.c
+        os161-1.99/kern/compile/ASST3/autoconf.h
+        os161-1.99/kern/compile/ASST3/opt-A0.h
+        os161-1.99/kern/compile/ASST3/opt-A1.h
+        os161-1.99/kern/compile/ASST3/opt-A2.h
+        os161-1.99/kern/compile/ASST3/opt-A3.h
+        os161-1.99/kern/compile/ASST3/opt-A4.h
+        os161-1.99/kern/compile/ASST3/opt-A5.h
+        os161-1.99/kern/compile/ASST3/opt-dumbvm.h
+        os161-1.99/kern/compile/ASST3/opt-net.h
+        os161-1.99/kern/compile/ASST3/opt-netfs.h
+        os161-1.99/kern/compile/ASST3/opt-noasserts.h
+        os161-1.99/kern/compile/ASST3/opt-sfs.h
+        os161-1.99/kern/compile/ASST3/opt-synchprobs.h
+        os161-1.99/kern/compile/ASST3/vers.c
         os161-1.99/kern/dev/generic/beep.c
         os161-1.99/kern/dev/generic/beep.h
         os161-1.99/kern/dev/generic/console.c
@@ -281,6 +278,7 @@ add_executable(cs350_os161
         os161-1.99/kern/include/cdefs.h
         os161-1.99/kern/include/clock.h
         os161-1.99/kern/include/copyinout.h
+        os161-1.99/kern/include/coremap.h
         os161-1.99/kern/include/cpu.h
         os161-1.99/kern/include/current.h
         os161-1.99/kern/include/device.h
@@ -291,6 +289,7 @@ add_executable(cs350_os161
         os161-1.99/kern/include/lib.h
         os161-1.99/kern/include/limits.h
         os161-1.99/kern/include/mainbus.h
+        os161-1.99/kern/include/pid.h
         os161-1.99/kern/include/proc.h
         os161-1.99/kern/include/queue.h
         os161-1.99/kern/include/setjmp.h
@@ -323,6 +322,7 @@ add_executable(cs350_os161
         os161-1.99/kern/lib/misc.c
         os161-1.99/kern/lib/queue.c
         os161-1.99/kern/lib/uio.c
+        os161-1.99/kern/proc/pid.c
         os161-1.99/kern/proc/proc.c
         os161-1.99/kern/startup/main.c
         os161-1.99/kern/startup/menu.c
@@ -359,6 +359,7 @@ add_executable(cs350_os161
         os161-1.99/kern/vfs/vfspath.c
         os161-1.99/kern/vfs/vnode.c
         os161-1.99/kern/vm/copyinout.c
+        os161-1.99/kern/vm/coremap.c
         os161-1.99/kern/vm/kmalloc.c
         os161-1.99/kern/vm/uw-vmstats.c
         os161-1.99/user/bin/cat/cat.c
@@ -516,7 +517,6 @@ add_executable(cs350_os161
         os161-1.99/user/uw-testbin/argtest/argtest.c
         os161-1.99/user/uw-testbin/argtesttest/argtesttest.c
         os161-1.99/user/uw-testbin/conc-io/conc-io.c
-        os161-1.99/user/uw-testbin/exec-sparse/exec-sparse.c
         os161-1.99/user/uw-testbin/files1/files1.c
         os161-1.99/user/uw-testbin/files2/files2.c
         os161-1.99/user/uw-testbin/hogparty/hogparty.c
@@ -542,48 +542,12 @@ add_executable(cs350_os161
         os161-1.99/user/uw-testbin/vm-mix2/vm-mix2.c
         os161-1.99/user/uw-testbin/vm-stack1/vm-stack1.c
         os161-1.99/user/uw-testbin/vm-stack2/vm-stack2.c
-        os161-1.99/user/uw-testbin/vm-stackgrow/vm-stackgrow.c
         os161-1.99/user/uw-testbin/widefork/widefork.c
         os161-1.99/user/uw-testbin/writeread/writeread.c
         os161-1.99/user/uw-testbin/xhog/xhog.c
         os161-1.99/user/uw-testbin/yhog/yhog.c
         os161-1.99/user/uw-testbin/zhog/zhog.c
-        root/hostinclude/kern/machine/endian.h
-        root/hostinclude/kern/machine/regdefs.h
-        root/hostinclude/kern/machine/setjmp.h
-        root/hostinclude/kern/machine/signal.h
-        root/hostinclude/kern/machine/types.h
-        root/hostinclude/kern/mips/endian.h
-        root/hostinclude/kern/mips/regdefs.h
-        root/hostinclude/kern/mips/setjmp.h
-        root/hostinclude/kern/mips/signal.h
-        root/hostinclude/kern/mips/types.h
-        root/hostinclude/kern/endian.h
-        root/hostinclude/kern/errmsg.h
-        root/hostinclude/kern/errno.h
-        root/hostinclude/kern/fcntl.h
-        root/hostinclude/kern/ioctl.h
-        root/hostinclude/kern/iovec.h
-        root/hostinclude/kern/limits.h
-        root/hostinclude/kern/reboot.h
-        root/hostinclude/kern/resource.h
-        root/hostinclude/kern/seek.h
-        root/hostinclude/kern/sfs.h
-        root/hostinclude/kern/signal.h
-        root/hostinclude/kern/socket.h
-        root/hostinclude/kern/stat.h
-        root/hostinclude/kern/stattypes.h
-        root/hostinclude/kern/syscall.h
-        root/hostinclude/kern/time.h
-        root/hostinclude/kern/types.h
-        root/hostinclude/kern/unistd.h
-        root/hostinclude/kern/wait.h
         root/hostinclude/hostcompat.h
-        root/include/kern/machine/endian.h
-        root/include/kern/machine/regdefs.h
-        root/include/kern/machine/setjmp.h
-        root/include/kern/machine/signal.h
-        root/include/kern/machine/types.h
         root/include/kern/mips/endian.h
         root/include/kern/mips/regdefs.h
         root/include/kern/mips/setjmp.h
@@ -609,11 +573,6 @@ add_executable(cs350_os161
         root/include/kern/types.h
         root/include/kern/unistd.h
         root/include/kern/wait.h
-        root/include/machine/endian.h
-        root/include/machine/regdefs.h
-        root/include/machine/setjmp.h
-        root/include/machine/signal.h
-        root/include/machine/types.h
         root/include/sys/endian.h
         root/include/sys/ioctl.h
         root/include/sys/null.h
