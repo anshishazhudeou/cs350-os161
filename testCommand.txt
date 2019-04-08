@@ -1,15 +1,15 @@
 basic virtual memory integrity and TLB tests
-sys161 kernel "p uw-testbin/vm-data1;q"
-sys161 kernel "p uw-testbin/vm-data3;q"
+sys161 kernel "p uw-testbin/vm-data1;q"    2048000
+sys161 kernel "p uw-testbin/vm-data3;q"    2048000
 
 
 read-only memory tests
-sys161 kernel "p uw-testbin/romemwrite;q"
-sys161 kernel "p uw-testbin/vm-crash2;q"
+sys161 kernel "p uw-testbin/romemwrite;q"  524288
+sys161 kernel "p uw-testbin/vm-crash2;q"   524288
 
 
 
 physical memory management tests
-sys161 kernel "p testbin/sort;p testbin/sort;p testbin/sort;q"
-sys161 kernel "p testbin/matmult;p testbin/matmult;p testbin/matmult;q"
-sys161 kernel "p uw-testbin/vm-data1;p uw-testbin/vm-data1;p uw-testbin/vm-data1;q"
+sys161 kernel "p testbin/sort;p testbin/sort;p testbin/sort;q" 	   2572288
+sys161 kernel "p testbin/matmult;p testbin/matmult;p testbin/matmult;q" 3145728
+sys161 kernel "p uw-testbin/vm-data1;p uw-testbin/vm-data1;p uw-testbin/vm-data1;q" 1048576
