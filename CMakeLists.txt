@@ -359,7 +359,6 @@ add_executable(cs350_os161
         os161-1.99/kern/vfs/vfspath.c
         os161-1.99/kern/vfs/vnode.c
         os161-1.99/kern/vm/copyinout.c
-        os161-1.99/kern/vm/coremap.c
         os161-1.99/kern/vm/kmalloc.c
         os161-1.99/kern/vm/uw-vmstats.c
         os161-1.99/user/bin/cat/cat.c
