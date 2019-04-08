@@ -2,14 +2,13 @@
 <project version="4">
   <component name="PublishConfigData" autoUpload="Always" promptOnRemoteOverwrite="CHECK_TIMESTAMP" filePermissions="511" folderPermissions="511" autoUploadExternalChanges="true">
     <serverData>
-      <paths name="Remote (d7fcf60e-d178-4672-92ac-8594ee9b03f0)">
+      <paths name="Remote (78d11b0f-d087-426a-930b-6d7509d52e5d)">
         <serverdata>
           <mappings>
-            <mapping deploy="/cs350-os161" local="$PROJECT_DIR$" />
+            <mapping deploy="/cs350-os161" local="$PROJECT_DIR$" web="/" />
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-remote" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
           </excludedPaths>
         </serverdata>
       </paths>
