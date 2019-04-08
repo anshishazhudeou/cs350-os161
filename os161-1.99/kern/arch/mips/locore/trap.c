@@ -39,7 +39,11 @@
 #include <vm.h>
 #include <mainbus.h>
 #include <syscall.h>
-
+#include "opt-A3.h"
+#include <proc.h>
+#include <addrspace.h>
+#include <synch.h>
+#include <kern/wait.h>
 
 /* in exception.S */
 extern void asm_usermode(struct trapframe *tf);
@@ -71,50 +75,120 @@ static const char *const trapcodenames[NTRAPCODES] = {
  */
 static
 void
-kill_curthread(vaddr_t epc, unsigned code, vaddr_t vaddr)
-{
+kill_curthread(vaddr_t epc, unsigned code, vaddr_t vaddr) {
 	int sig = 0;
 
 	KASSERT(code < NTRAPCODES);
 	switch (code) {
-	    case EX_IRQ:
-	    case EX_IBE:
-	    case EX_DBE:
-	    case EX_SYS:
-		/* should not be seen */
-		KASSERT(0);
-		sig = SIGABRT;
-		break;
-	    case EX_MOD:
-	    case EX_TLBL:
-	    case EX_TLBS:
-		sig = SIGSEGV;
-		break;
-	    case EX_ADEL:
-	    case EX_ADES:
-		sig = SIGBUS;
-		break;
-	    case EX_BP:
-		sig = SIGTRAP;
-		break;
-	    case EX_RI:
-		sig = SIGILL;
-		break;
-	    case EX_CPU:
-		sig = SIGSEGV;
-		break;
-	    case EX_OVF:
-		sig = SIGFPE;
-		break;
+		case EX_IRQ:
+		case EX_IBE:
+		case EX_DBE:
+		case EX_SYS:
+			/* should not be seen */
+			KASSERT(0);
+			sig = SIGABRT;
+			break;
+		case EX_MOD:
+		case EX_TLBL:
+		case EX_TLBS:
+			sig = SIGSEGV;
+			break;
+		case EX_ADEL:
+		case EX_ADES:
+			sig = SIGBUS;
+			break;
+		case EX_BP:
+			sig = SIGTRAP;
+			break;
+		case EX_RI:
+			sig = SIGILL;
+			break;
+		case EX_CPU:
+			sig = SIGSEGV;
+			break;
+		case EX_OVF:
+			sig = SIGFPE;
+			break;
 	}
 
 	/*
 	 * You will probably want to change this.
 	 */
+#if OPT_A3
+    // keep compiler from complaining about an unused variables
+    (void)epc;
+    (void)vaddr;
+
+    /* proc.c 341 */
+    struct addrspace *as;
+    struct proc *p = curproc;
+    pid_t temPid = p->pid; // get current process id
+
+    struct proc *temp_proc = p;//get a ptr to struct proc of current prcoess from pid
+
+    DEBUG(DB_VM, "kill_curthread(): killing pid=%d.\n", temPid);
+
+    KASSERT(temp_proc->p_addrspace != NULL); // ensure current process is not empty
+
+    temp_proc = NULL;
+
+    as_deactivate();
+    DEBUG(DB_VM, "kill_curthread(): as_deactivate() done.\n");
+
+    as = curproc_setas(NULL);//change the curr address space, return the old one
+    DEBUG(DB_VM, "kill_curthread(): curproc_setas(NULL) done.\n");
+
+    as_destroy(as); // destroy the old as
+    DEBUG(DB_VM, "kill_curthread(): as_destroy() done.\n");
+     /* proc.c 341 */
+
+    proc_remthread(curthread); // detach a thread from it process
+
+
+
+    if (!procinfolist_cv) { // lock is not using
+      procinfolist_cv = cv_create("procinfolist_cv");
+    }
+    // take this look
+    lock_acquire(procinfolist_lock);
+    struct procinfo *pi = procinfoarray_get_by_pid(procinfolist, p->pid); // curr process procinfo
+    pid_t pid = pi->pid;
+    pid_t ppid = pi->ppid;
+    if (ppid == -1) { // no parents
+          // I can exit right now
+          pi->state = EXITED;
+          procinfoarray_remove_by_pid(procinfolist, pid); // remove curr pid from procinfoarrary
+      } else {
+          struct procinfo *pp = procinfoarray_get_by_pid(procinfolist, ppid); // parent proc info
+          if (!pp || RUNNING == pp->state) { // if parent 的procinfo是empty or state有错
+          	pi->state = ZOMBIE;
+          	cv_broadcast(procinfolist_cv, procinfolist_lock);
+          } else {
+          	pi->state = EXITED;
+          	procinfoarray_remove_by_pid(procinfolist, pid);
+          }
+      }
+      // cleanup zombine
+      unsigned size = procinfoarray_num(procinfolist);
+      // assumption: no multi child
+      for (unsigned i=0; i<size; ++i) {
+      	struct procinfo *pi = procinfoarray_get(procinfolist, i);
+      	if (pi->ppid == pid && pi->state == ZOMBIE) {
+      		pi->state = EXITED;
+      		procinfoarray_remove(procinfolist, i);
+      	}
+      }
+      lock_release(procinfolist_lock);
+      thread_exit();
+      panic("return from thread_exit in kill_curthread()\n");
+
+
+#else
 
 	kprintf("Fatal user mode trap %u sig %d (%s, epc 0x%x, vaddr 0x%x)\n",
 		code, sig, trapcodenames[code], epc, vaddr);
 	panic("I don't know how to handle this\n");
+#endif
 }
 
 /*
