@@ -65,7 +65,7 @@ struct coremap {
 
 struct coremap *coremap;
 bool isCoremapDone = false;
-int phase = -1;//r
+
 
 
 int find_index(unsigned long npages);
@@ -82,7 +82,6 @@ vm_bootstrap(void) {
     numofFrames = (topPageAddress - bottomPageAddress) / PAGE_SIZE;
     bottomPageAddress = numofFrames * (sizeof(struct coremap)) + bottomPageAddress;
     paddr_t startAddressing = ROUNDUP(bottomPageAddress, PAGE_SIZE);
-
     for (int i = 0; i < numofFrames; ++i) {
         coremap[i].is_used = false;
         coremap[i].contiguous = 0;
@@ -90,7 +89,6 @@ vm_bootstrap(void) {
         startAddressing += PAGE_SIZE;
     }
     isCoremapDone = true;
-    phase = 1;
 #endif
 }
 
@@ -147,7 +145,7 @@ getppages(unsigned long npages) {
     }
     DEBUG(DB_VM, "getppages(): paddr is %d\n", addr);
 
-    phase = 2;
+
     return addr;
 
 #else
@@ -210,7 +208,7 @@ free_kpages(vaddr_t addr) {
     DEBUG(DB_VM, "free_kpages(): freed all\n");
 
     spinlock_release(&stealmem_lock);
-    phase = 3;
+
 #else
 	(void)paddr;
 #endif
@@ -309,7 +307,7 @@ vm_fault(int faulttype, vaddr_t faultaddress) {
 
 
 #if OPT_A3
-	phase = 4;
+
     bool valid = false;
 
     if (faultaddress >= vbase1 && faultaddress < vtop1) {
@@ -400,7 +398,7 @@ as_create(void) {
 
 #if OPT_A3
 	as->elf_loaded = false;
-    phase = 5;
+
 #endif
 	as->as_vbase1 = 0;
 	as->as_pbase1 = 0;
@@ -418,7 +416,7 @@ as_create(void) {
 void
 as_destroy(struct addrspace *as) {
 #if OPT_A3
-	phase = 6;
+
     free_kpages(PADDR_TO_KVADDR(as->as_pbase2));
     free_kpages(PADDR_TO_KVADDR(as->as_pbase1));
     free_kpages(PADDR_TO_KVADDR(as->as_stackpbase));
@@ -532,7 +530,7 @@ as_prepare_load(struct addrspace *as) {
 int
 as_complete_load(struct addrspace *as) {
 #if OPT_A3
-	phase = 7;
+
     as->elf_loaded = true;
 #else
 	(void)as;
