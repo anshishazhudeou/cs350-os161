@@ -65,7 +65,7 @@ struct coremap {
 
 struct coremap *coremap;
 bool isCoremapDone = false;
-int phase = -1;
+int phase = -1;//r
 
 
 int find_index(unsigned long npages);
