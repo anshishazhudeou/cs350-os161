@@ -37,6 +37,7 @@
 #include <mips/tlb.h>
 #include <addrspace.h>
 #include <vm.h>
+#include "opt-A3.h"
 
 /*
  * Dumb MIPS-only "VM system" that is intended to only be just barely
@@ -50,6 +51,11 @@
  * Wrap rma_stealmem in a spinlock.
  */
 static struct spinlock stealmem_lock = SPINLOCK_INITIALIZER;
+
+#ifdef OPT_A3
+
+
+#endif
 
 void
 vm_bootstrap(void)
@@ -66,7 +72,7 @@ getppages(unsigned long npages)
 	spinlock_acquire(&stealmem_lock);
 
 	addr = ram_stealmem(npages);
-	
+
 	spinlock_release(&stealmem_lock);
 	return addr;
 }

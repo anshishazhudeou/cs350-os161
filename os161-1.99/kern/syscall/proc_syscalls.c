@@ -90,22 +90,22 @@ void sys__exit(int exitcode) {
      an unused variable */
   (void)exitcode;
 #if OPT_A2
-  if (!procinfolist_cv) {
+  if (!procinfolist_cv) { // lock is not using
       procinfolist_cv = cv_create("procinfolist_cv");
   }
-
+  // take this look
   lock_acquire(procinfolist_lock);
 
-  struct procinfo *pi = procinfoarray_get_by_pid(procinfolist, p->pid);
+  struct procinfo *pi = procinfoarray_get_by_pid(procinfolist, p->pid); // curr process procinfo
   pid_t pid = pi->pid;
   pid_t ppid = pi->ppid;
-  if (ppid == -1) {
+  if (ppid == -1) { //
       pi->state = EXITED;
-      procinfoarray_remove_by_pid(procinfolist, pid);
+      procinfoarray_remove_by_pid(procinfolist, pid); //把当前的pid从procinfoarray移除了
   } else {
       pi->exit_status = _MKWAIT_EXIT(exitcode);
-      struct procinfo *pp = procinfoarray_get_by_pid(procinfolist, ppid);
-      if (!pp || RUNNING == pp->state) {
+      struct procinfo *pp = procinfoarray_get_by_pid(procinfolist, ppid); // parent proc info
+      if (!pp || RUNNING == pp->state) { // if parent 的procinfo是empty or state有错
           pi->state = ZOMBIE;
           cv_broadcast(procinfolist_cv, procinfolist_lock);
       } else {
