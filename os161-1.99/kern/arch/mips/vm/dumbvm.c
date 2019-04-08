@@ -54,13 +54,74 @@ static struct spinlock stealmem_lock = SPINLOCK_INITIALIZER;
 
 #ifdef OPT_A3
 
+volatile int num_frames = 0;
+volatile unsigned long num_pages = 0;
+
+struct coremap {
+    paddr_t paddr;
+    bool is_using;
+    unsigned long lianxu;
+};
+
+struct coremap *coremap;
+bool coremap_done = false;
+int phase = -1;
+
+
+int find_index(unsigned long npages);
 
 #endif
 
 void
 vm_bootstrap(void)
 {
-	/* Do nothing. */
+#if OPT_A3
+	paddr_t firstpaddr;
+    paddr_t lastpaddr;
+    ram_getsize(&firstpaddr, &lastpaddr);
+
+    coremap = (struct coremap *) PADDR_TO_KVADDR(firstpaddr);
+
+    num_frames = (lastpaddr - firstpaddr) / PAGE_SIZE;
+    paddr_t start = ROUNDUP((sizeof(struct coremap)) * num_frames, PAGE_SIZE) + firstpaddr;
+    DEBUG(DB_VM, "vm_bootstrap(): start = %d\n", start);
+    DEBUG(DB_VM, "vm_bootstrap(): num_frames = %d\n", num_frames);
+
+
+    for (int i = 0; i < num_frames; i++) {
+        coremap[i].paddr = start;
+        start = start + PAGE_SIZE;
+        coremap[i].is_using = false;
+        coremap[i].lianxu = 0;
+    }
+    coremap_done = true;
+    DEBUG(DB_VM, "vm_bootstrap(): finished\n");
+    phase = 1;
+
+#endif
+}
+
+int
+find_index(unsigned long npages) {
+	int index = -1;
+	spinlock_acquire(&stealmem_lock);
+
+	num_pages = 0;
+
+	for (int i = 0; i < num_frames && num_pages != npages; i++) {
+		if (!coremap[i].is_using) {
+			if (num_pages == 0) {
+				index = i;
+			}
+			num_pages = num_pages + 1;
+		} else {
+			//reset
+			num_pages = 0;
+			index = -1;
+		}
+	}
+	spinlock_release(&stealmem_lock);
+	return index;
 }
 
 static
@@ -69,12 +130,41 @@ getppages(unsigned long npages)
 {
 	paddr_t addr;
 
+#if OPT_A3
+
+	if (coremap_done) {
+        int entry_point = find_index(npages);
+        DEBUG(DB_VM, "getppages(): entry_point = %d\n", entry_point);
+
+        if (entry_point == -1) {
+            panic("getppages(): Cannot find desired memory block\n");
+        }
+
+        addr = coremap[entry_point].paddr;
+        coremap[entry_point].lianxu = num_pages;
+
+        unsigned long end_point = entry_point + num_pages;
+        // mark them as in use
+        for (unsigned int i = (unsigned int) entry_point; i < end_point; i++) {
+            coremap[i].is_using = true;
+        }
+
+    } else {
+        DEBUG(DB_VM, "getppages(): calling ram_stealmem()\n");
+        addr = ram_stealmem(npages);
+    }
+    DEBUG(DB_VM, "getppages(): paddr is %d\n", addr);
+
+    phase = 2;
+    return addr;
+
+#else
 	spinlock_acquire(&stealmem_lock);
-
-	addr = ram_stealmem(npages);
-
+	paddr = ram_stealmem(npages);
 	spinlock_release(&stealmem_lock);
-	return addr;
+
+	return paddr;
+#endif
 }
 
 /* Allocate/free some kernel-space virtual pages */
@@ -92,9 +182,47 @@ alloc_kpages(int npages)
 void 
 free_kpages(vaddr_t addr)
 {
-	/* nothing - leak the memory. */
+#if OPT_A3
 
-	(void)addr;
+	if (coremap_done && addr == 0) {
+        return;
+    }
+    spinlock_acquire(&stealmem_lock);
+    // physical
+    paddr_t free_paddr = addr - MIPS_KSEG0;
+    DEBUG(DB_VM, "free_kpages(): physical paddr = %d\n", free_paddr);
+
+
+    for (int i = 0; i < num_frames; i++) {
+        if (coremap[i].paddr == addr) {
+            coremap[i].is_using = false;
+            if (coremap[i].lianxu == 0) {
+                break;
+            }
+        }
+    }
+    DEBUG(DB_VM, "free_kpages(): freed paddr\n");
+
+
+    for (int j = 0; j < num_frames; j++) {
+        if (coremap[j].paddr == free_paddr) {
+            unsigned long end = coremap[j].lianxu;
+
+            coremap[j].lianxu = 0;
+
+            for (unsigned int k = 0; k < end; k++) {
+                coremap[j + k].is_using = false;
+            }
+            break;
+        }
+    }
+    DEBUG(DB_VM, "free_kpages(): freed all\n");
+
+    spinlock_release(&stealmem_lock);
+    phase = 3;
+#else
+	(void)paddr;
+#endif
 }
 
 void
@@ -127,7 +255,11 @@ vm_fault(int faulttype, vaddr_t faultaddress)
 	switch (faulttype) {
 	    case VM_FAULT_READONLY:
 		/* We always create pages read-write, so we can't get this */
-		panic("dumbvm: got VM_FAULT_READONLY\n");
+#if OPT_A3
+			return EINVAL;
+#else
+			panic("dumbvm: got VM_FAULT_READONLY\n");
+#endif
 	    case VM_FAULT_READ:
 	    case VM_FAULT_WRITE:
 		break;
@@ -174,6 +306,23 @@ vm_fault(int faulttype, vaddr_t faultaddress)
 	stackbase = USERSTACK - DUMBVM_STACKPAGES * PAGE_SIZE;
 	stacktop = USERSTACK;
 
+#if OPT_A3
+	phase = 4;
+    bool valid = false;
+
+    if (faultaddress >= vbase1 && faultaddress < vtop1) {
+        paddr = as->as_pbase1 + (faultaddress - vbase1);
+    } else if (faultaddress >= vbase2 && faultaddress < vtop2) {
+        paddr = as->as_pbase2 + (faultaddress - vbase2);
+    } else if (faultaddress >= stackbase && faultaddress < stacktop) {
+        paddr = as->as_stackpbase + (faultaddress - stackbase);
+    } else {
+        return EFAULT;
+    }
+    DEBUG(DB_VM, "vm_fault(): set paddr\n");
+
+#else
+
 	if (faultaddress >= vbase1 && faultaddress < vtop1) {
 		paddr = (faultaddress - vbase1) + as->as_pbase1;
 	}
@@ -186,6 +335,8 @@ vm_fault(int faulttype, vaddr_t faultaddress)
 	else {
 		return EFAULT;
 	}
+#endif
+
 
 	/* make sure it's page-aligned */
 	KASSERT((paddr & PAGE_FRAME) == paddr);
@@ -201,14 +352,37 @@ vm_fault(int faulttype, vaddr_t faultaddress)
 		ehi = faultaddress;
 		elo = paddr | TLBLO_DIRTY | TLBLO_VALID;
 		DEBUG(DB_VM, "dumbvm: 0x%x -> 0x%x\n", faultaddress, paddr);
+#if OPT_A3
+		valid = (faultaddress >= vbase1 && faultaddress < vtop1);
+        if (valid && as->elf_loaded) {
+            elo &= ~TLBLO_DIRTY;
+            DEBUG(DB_VM, "vm_fault(): inside TLB loop: elo &= ~TLBLO_DIRTY\n");
+        }
+#endif
 		tlb_write(ehi, elo, i);
 		splx(spl);
 		return 0;
 	}
 
+#if OPT_A3
+	ehi = faultaddress;
+    elo = paddr | TLBLO_DIRTY | TLBLO_VALID;
+    valid = (faultaddress >= vbase1 && faultaddress < vtop1);
+
+    if (valid && as->elf_loaded) {
+        elo &= ~TLBLO_DIRTY;
+    }
+    DEBUG(DB_VM, "vm_fault(): outside TLB loop; elo &= ~TLBLO_DIRTY\n");
+
+    tlb_random(ehi, elo);
+    splx(spl);
+    return 0;
+
+#else
 	kprintf("dumbvm: Ran out of TLB entries - cannot handle page fault\n");
 	splx(spl);
 	return EFAULT;
+#endif
 }
 
 struct addrspace *
@@ -218,6 +392,10 @@ as_create(void)
 	if (as==NULL) {
 		return NULL;
 	}
+#if OPT_A3
+	as->elf_loaded = false;
+    phase = 5;
+#endif
 
 	as->as_vbase1 = 0;
 	as->as_pbase1 = 0;
@@ -233,6 +411,13 @@ as_create(void)
 void
 as_destroy(struct addrspace *as)
 {
+#if OPT_A3
+	phase = 6;
+    free_kpages(PADDR_TO_KVADDR(as->as_pbase2));
+    free_kpages(PADDR_TO_KVADDR(as->as_pbase1));
+    free_kpages(PADDR_TO_KVADDR(as->as_stackpbase));
+    DEBUG(DB_VM, "as_destroy(): as destoried.\n");
+#endif
 	kfree(as);
 }
 
@@ -344,7 +529,12 @@ as_prepare_load(struct addrspace *as)
 int
 as_complete_load(struct addrspace *as)
 {
+#if OPT_A3
+	phase = 7;
+    as->elf_loaded = true;
+#else
 	(void)as;
+#endif
 	return 0;
 }
 
