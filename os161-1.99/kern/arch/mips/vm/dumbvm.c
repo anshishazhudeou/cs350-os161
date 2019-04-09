@@ -163,43 +163,30 @@ alloc_kpages(int npages) {
 
 void
 free_kpages(vaddr_t addr) {
-#if OPT_A3
+	#if OPT_A3
 
 	spinlock_acquire(&stealmem_lock);
-	if (isCoremapDone && addr == 0) {
-        return;
-    }
-    // physical
-    paddr_t free_paddr = addr - MIPS_KSEG0;
-
     for (int i = 0; i < numofFrames; i++) {
         if (coremap[i].paddr == addr) {
             coremap[i].is_used = false;
-            if (coremap[i].contiguous == 0) {
-                break;
-            }
         }
     }
 
-
+    paddr_t freePageAddress = addr - MIPS_KSEG0;
     for (int j = 0; j < numofFrames; j++) {
-        if (coremap[j].paddr == free_paddr) {
-            unsigned long end = coremap[j].contiguous;
-
+        if (coremap[j].paddr == freePageAddress) {
+            int endofContiguousFrames = coremap[j].contiguous;
             coremap[j].contiguous = 0;
-
-            for (unsigned int k = 0; k < end; k++) {
-                coremap[j + k].is_used = false;
+            for (int i = 0; i < endofContiguousFrames; ++i) {
+                coremap[i + j].is_used = false;
             }
             break;
         }
     }
-
     spinlock_release(&stealmem_lock);
-
-#else
-	(void)paddr;
-#endif
+	#else
+		(void)paddr;
+	#endif
 }
 
 void
@@ -226,7 +213,6 @@ segment contiguously in physical memory
  */
 int
 vm_fault(int faulttype, vaddr_t faultaddress) {
-	DEBUG(DB_VM, "vm_fault(): startAddressing\n");
 
 	vaddr_t vbase1, vtop1, vbase2, vtop2, stackbase, stacktop;
 	paddr_t paddr;
@@ -236,17 +222,10 @@ vm_fault(int faulttype, vaddr_t faultaddress) {
 	int spl;
 
 	faultaddress &= PAGE_FRAME;
-
-	DEBUG(DB_VM, "vm_fault(): fault: 0x%x\n", faultaddress);
-
 	switch (faulttype) {
 		case VM_FAULT_READONLY:
 			/* We always create pages read-write, so we can't get this */
-#if OPT_A3
-			return EINVAL;
-#else
-			panic("dumbvm: got VM_FAULT_READONLY\n");
-#endif
+			return 1;
 		case VM_FAULT_READ:
 		case VM_FAULT_WRITE:
 			break;
@@ -294,22 +273,6 @@ vm_fault(int faulttype, vaddr_t faultaddress) {
 	stacktop = USERSTACK;
 
 
-#if OPT_A3
-
-	bool valid = false;
-
-    if (faultaddress >= vbase1 && faultaddress < vtop1) {
-        paddr = as->as_pbase1 + (faultaddress - vbase1);
-    } else if (faultaddress >= vbase2 && faultaddress < vtop2) {
-        paddr = as->as_pbase2 + (faultaddress - vbase2);
-    } else if (faultaddress >= stackbase && faultaddress < stacktop) {
-        paddr = as->as_stackpbase + (faultaddress - stackbase);
-    } else {
-        return EFAULT;
-    }
-    DEBUG(DB_VM, "vm_fault(): set paddr\n");
-
-#else
 
 	if (faultaddress >= vbase1 && faultaddress < vtop1) {
 		paddr = (faultaddress - vbase1) + as->as_pbase1;
@@ -323,7 +286,6 @@ vm_fault(int faulttype, vaddr_t faultaddress) {
 	else {
 		return EFAULT;
 	}
-#endif
 
 
 	/* make sure it's page-aligned */
@@ -339,17 +301,6 @@ vm_fault(int faulttype, vaddr_t faultaddress) {
 		}
 		ehi = faultaddress;
 		elo = paddr | TLBLO_DIRTY | TLBLO_VALID;
-		DEBUG(DB_VM, "dumbvm: 0x%x -> 0x%x\n", faultaddress, paddr);
-
-#if OPT_A3
-		valid = (faultaddress >= vbase1 && faultaddress < vtop1);
-        if (valid && as->elf_loaded) {
-            elo &= ~TLBLO_DIRTY;
-            DEBUG(DB_VM, "vm_fault(): inside TLB loop: elo &= ~TLBLO_DIRTY\n");
-        }
-#endif
-		DEBUG(DB_VM, "dumbvm: 0x%x -> 0x%x\n", faultaddress, paddr);
-
 		tlb_write(ehi, elo, i);
 		splx(spl);
 		return 0;
@@ -357,17 +308,12 @@ vm_fault(int faulttype, vaddr_t faultaddress) {
 #if OPT_A3
 	ehi = faultaddress;
     elo = paddr | TLBLO_DIRTY | TLBLO_VALID;
-    valid = (faultaddress >= vbase1 && faultaddress < vtop1);
-
-    if (valid && as->elf_loaded) {
+    if (faultaddress >= vbase1 && faultaddress < vtop1) {
         elo &= ~TLBLO_DIRTY;
     }
-    DEBUG(DB_VM, "vm_fault(): outside TLB loop; elo &= ~TLBLO_DIRTY\n");
-
     tlb_random(ehi, elo);
     splx(spl);
     return 0;
-
 #else
 	kprintf("dumbvm: Ran out of TLB entries - cannot handle page fault\n");
 	splx(spl);
@@ -383,11 +329,6 @@ as_create(void) {
 	if (as == NULL) {
 		return NULL;
 	}
-
-#if OPT_A3
-	as->elf_loaded = false;
-
-#endif
 	as->as_vbase1 = 0;
 	as->as_pbase1 = 0;
 	as->as_npages1 = 0;
@@ -395,8 +336,6 @@ as_create(void) {
 	as->as_pbase2 = 0;
 	as->as_npages2 = 0;
 	as->as_stackpbase = 0;
-	DEBUG(DB_VM, "as_create(): as created.\n");
-
 	return as;
 }
 
@@ -404,11 +343,9 @@ as_create(void) {
 void
 as_destroy(struct addrspace *as) {
 #if OPT_A3
-
+	free_kpages(PADDR_TO_KVADDR(as->as_pbase1));
 	free_kpages(PADDR_TO_KVADDR(as->as_pbase2));
-    free_kpages(PADDR_TO_KVADDR(as->as_pbase1));
     free_kpages(PADDR_TO_KVADDR(as->as_stackpbase));
-    DEBUG(DB_VM, "as_destroy(): as destoried.\n");
 #endif
 	kfree(as);
 }
@@ -517,12 +454,7 @@ as_prepare_load(struct addrspace *as) {
 
 int
 as_complete_load(struct addrspace *as) {
-#if OPT_A3
-
-	as->elf_loaded = true;
-#else
 	(void)as;
-#endif
 	return 0;
 }
 
