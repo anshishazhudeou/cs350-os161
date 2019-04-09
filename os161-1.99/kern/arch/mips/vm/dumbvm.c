@@ -39,9 +39,6 @@
 #include <addrspace.h>
 #include <vm.h>
 
-
-
-
 /*
  * Dumb MIPS-only "VM system" that is intended to only be just barely
  * enough to struggle off the ground.
@@ -57,18 +54,18 @@ static struct spinlock stealmem_lock = SPINLOCK_INITIALIZER;
 
 #ifdef OPT_A3
 
-volatile int num_frames = 0;
-volatile unsigned long num_pages = 0;
+volatile int numofFrames = 0;
+volatile unsigned long numofPages = 0;
 
 struct coremap {
     paddr_t paddr;
-    bool is_using;
-    unsigned long lianxu;
+    bool is_used;
+    unsigned long contiguous;
 };
 
 struct coremap *coremap;
-bool coremap_done = false;
-int phase = -1;
+bool isCoremapDone = false;
+
 
 
 int find_index(unsigned long npages);
@@ -79,93 +76,76 @@ int find_index(unsigned long npages);
 void
 vm_bootstrap(void) {
 #if OPT_A3
-	paddr_t firstpaddr;
-    paddr_t lastpaddr;
-    ram_getsize(&firstpaddr, &lastpaddr);
+	paddr_t bottomPageAddress, topPageAddress;
+    ram_getsize(&bottomPageAddress, &topPageAddress);
+    coremap = (struct coremap *) PADDR_TO_KVADDR(bottomPageAddress);
+    numofFrames = (topPageAddress - bottomPageAddress) / PAGE_SIZE;
+    bottomPageAddress = numofFrames * (sizeof(struct coremap)) + bottomPageAddress;
+    paddr_t startAddressing = ROUNDUP(bottomPageAddress, PAGE_SIZE);
 
-    coremap = (struct coremap *) PADDR_TO_KVADDR(firstpaddr);
-
-    num_frames = (lastpaddr - firstpaddr) / PAGE_SIZE;
-    paddr_t start = ROUNDUP((sizeof(struct coremap)) * num_frames, PAGE_SIZE) + firstpaddr;
-    DEBUG(DB_VM, "vm_bootstrap(): start = %d\n", start);
-    DEBUG(DB_VM, "vm_bootstrap(): num_frames = %d\n", num_frames);
-
-
-    for (int i = 0; i < num_frames; i++) {
-        coremap[i].paddr = start;
-        start = start + PAGE_SIZE;
-        coremap[i].is_using = false;
-        coremap[i].lianxu = 0;
+    for (int i = 0; i < numofFrames; ++i) {
+        coremap[i].is_used = false;
+        coremap[i].contiguous = 0;
+        coremap[i].paddr = startAddressing;
+        startAddressing += PAGE_SIZE;
     }
-    coremap_done = true;
-    DEBUG(DB_VM, "vm_bootstrap(): finished\n");
-    phase = 1;
 
+    isCoremapDone = true;
 #endif
 }
 
 
-int
-find_index(unsigned long npages) {
-	int index = -1;
-	spinlock_acquire(&stealmem_lock);
 
-	num_pages = 0;
-
-	for (int i = 0; i < num_frames && num_pages != npages; i++) {
-		if (!coremap[i].is_using) {
-			if (num_pages == 0) {
-				index = i;
-			}
-			num_pages = num_pages + 1;
-		} else {
-			//reset
-			num_pages = 0;
-			index = -1;
-		}
-	}
-	spinlock_release(&stealmem_lock);
-	return index;
-}
 
 static
 paddr_t
 getppages(unsigned long npages) {
-	paddr_t addr;
+	paddr_t beginningAddress;
 #if OPT_A3
 
-	if (coremap_done) {
-        int entry_point = find_index(npages);
-        DEBUG(DB_VM, "getppages(): entry_point = %d\n", entry_point);
-
-        if (entry_point == -1) {
-            panic("getppages(): Cannot find desired memory block\n");
+	// allocate some memory while booting up
+	if(!isCoremapDone) {
+		beginningAddress = ram_stealmem(npages);
+	} else {
+		// after we iniliaze the VM
+        // we need to find the starting paging index of npage
+        // int startingPageIndex=find_index(npages);
+        int startingPageIndex = -1;
+        spinlock_acquire(&stealmem_lock);
+        numofPages = 0;
+        int counter = 0; // see if we enter the loop for the first time
+        for (int i =0; i < numofFrames && numofPages < npages; ++i) {
+        	if (coremap[i].is_used) {
+        		// curr page is in use
+				numofPages = 0;
+				startingPageIndex = -1;
+        	} else {
+        		if (counter == 0){
+        			startingPageIndex = i;
+        		}
+        		++numofPages;
+        	}
         }
-
-        addr = coremap[entry_point].paddr;
-        coremap[entry_point].lianxu = num_pages;
-
-        unsigned long end_point = entry_point + num_pages;
+        spinlock_release(&stealmem_lock);
+        //int startingPageIndex = find_index(npages);
+        if (startingPageIndex == -1) { // we did not find index
+            panic("getppages(): Can not find avaiable memory block\n");
+        }
+        beginningAddress = coremap[startingPageIndex].paddr;
+        // assign numofPages to cnitiguous field
+        coremap[startingPageIndex].contiguous = numofPages;
+        int endPageIndex = startingPageIndex + numofPages;
         // mark them as in use
-        for (unsigned int i = (unsigned int) entry_point; i < end_point; i++) {
-            coremap[i].is_using = true;
+        for (int i =startingPageIndex; i < endPageIndex; i++) {
+            coremap[i].is_used = true;
         }
 
-    } else {
-        DEBUG(DB_VM, "getppages(): calling ram_stealmem()\n");
-        addr = ram_stealmem(npages);
-    }
-    DEBUG(DB_VM, "getppages(): paddr is %d\n", addr);
-
-    phase = 2;
-    return addr;
+	}
+    return beginningAddress;
 
 #else
-	spinlock_acquire(&stealmem_lock);
-	paddr = ram_stealmem(npages);
-	spinlock_release(&stealmem_lock);
-
-	return paddr;
+	beginningAddress = ram_stealmem(npages);
+	return beginningAddress;
 #endif
 }
 
@@ -185,42 +165,38 @@ void
 free_kpages(vaddr_t addr) {
 #if OPT_A3
 
-	if (coremap_done && addr == 0) {
+	spinlock_acquire(&stealmem_lock);
+	if (isCoremapDone && addr == 0) {
         return;
     }
-    spinlock_acquire(&stealmem_lock);
     // physical
     paddr_t free_paddr = addr - MIPS_KSEG0;
-    DEBUG(DB_VM, "free_kpages(): physical paddr = %d\n", free_paddr);
 
-
-    for (int i = 0; i < num_frames; i++) {
+    for (int i = 0; i < numofFrames; i++) {
         if (coremap[i].paddr == addr) {
-            coremap[i].is_using = false;
-            if (coremap[i].lianxu == 0) {
+            coremap[i].is_used = false;
+            if (coremap[i].contiguous == 0) {
                 break;
             }
         }
     }
-    DEBUG(DB_VM, "free_kpages(): freed paddr\n");
 
 
-    for (int j = 0; j < num_frames; j++) {
+    for (int j = 0; j < numofFrames; j++) {
         if (coremap[j].paddr == free_paddr) {
-            unsigned long end = coremap[j].lianxu;
+            unsigned long end = coremap[j].contiguous;
 
-            coremap[j].lianxu = 0;
+            coremap[j].contiguous = 0;
 
             for (unsigned int k = 0; k < end; k++) {
-                coremap[j + k].is_using = false;
+                coremap[j + k].is_used = false;
             }
             break;
         }
     }
-    DEBUG(DB_VM, "free_kpages(): freed all\n");
 
     spinlock_release(&stealmem_lock);
-    phase = 3;
+
 #else
 	(void)paddr;
 #endif
@@ -250,7 +226,7 @@ segment contiguously in physical memory
  */
 int
 vm_fault(int faulttype, vaddr_t faultaddress) {
-	DEBUG(DB_VM, "vm_fault(): start\n");
+	DEBUG(DB_VM, "vm_fault(): startAddressing\n");
 
 	vaddr_t vbase1, vtop1, vbase2, vtop2, stackbase, stacktop;
 	paddr_t paddr;
@@ -319,8 +295,8 @@ vm_fault(int faulttype, vaddr_t faultaddress) {
 
 
 #if OPT_A3
-	phase = 4;
-    bool valid = false;
+
+	bool valid = false;
 
     if (faultaddress >= vbase1 && faultaddress < vtop1) {
         paddr = as->as_pbase1 + (faultaddress - vbase1);
@@ -410,7 +386,7 @@ as_create(void) {
 
 #if OPT_A3
 	as->elf_loaded = false;
-    phase = 5;
+
 #endif
 	as->as_vbase1 = 0;
 	as->as_pbase1 = 0;
@@ -428,8 +404,8 @@ as_create(void) {
 void
 as_destroy(struct addrspace *as) {
 #if OPT_A3
-	phase = 6;
-    free_kpages(PADDR_TO_KVADDR(as->as_pbase2));
+
+	free_kpages(PADDR_TO_KVADDR(as->as_pbase2));
     free_kpages(PADDR_TO_KVADDR(as->as_pbase1));
     free_kpages(PADDR_TO_KVADDR(as->as_stackpbase));
     DEBUG(DB_VM, "as_destroy(): as destoried.\n");
@@ -542,8 +518,8 @@ as_prepare_load(struct addrspace *as) {
 int
 as_complete_load(struct addrspace *as) {
 #if OPT_A3
-	phase = 7;
-    as->elf_loaded = true;
+
+	as->elf_loaded = true;
 #else
 	(void)as;
 #endif
