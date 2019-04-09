@@ -55,7 +55,7 @@ static struct spinlock stealmem_lock = SPINLOCK_INITIALIZER;
 #ifdef OPT_A3
 
 volatile int numofFrames = 0;
-volatile unsigned long num_pages = 0;
+volatile unsigned long numofPages = 0;
 
 struct coremap {
     paddr_t paddr;
@@ -82,78 +82,70 @@ vm_bootstrap(void) {
     numofFrames = (topPageAddress - bottomPageAddress) / PAGE_SIZE;
     bottomPageAddress = numofFrames * (sizeof(struct coremap)) + bottomPageAddress;
     paddr_t startAddressing = ROUNDUP(bottomPageAddress, PAGE_SIZE);
+
     for (int i = 0; i < numofFrames; ++i) {
         coremap[i].is_used = false;
         coremap[i].contiguous = 0;
         coremap[i].paddr = startAddressing;
         startAddressing += PAGE_SIZE;
     }
+
     isCoremapDone = true;
 #endif
 }
 
 
-int
-find_index(unsigned long npages) {
-	int index = -1;
-	spinlock_acquire(&stealmem_lock);
 
-	num_pages = 0;
-
-	for (int i = 0; i < numofFrames && num_pages != npages; i++) {
-		if (!coremap[i].is_used) {
-			if (num_pages == 0) {
-				index = i;
-			}
-			num_pages = num_pages + 1;
-		} else {
-			//reset
-			num_pages = 0;
-			index = -1;
-		}
-	}
-	spinlock_release(&stealmem_lock);
-	return index;
-}
 
 static
 paddr_t
 getppages(unsigned long npages) {
-	paddr_t addr;
+	paddr_t beginningAddress;
 #if OPT_A3
 
-	if (isCoremapDone) {
-        int entry_point = find_index(npages);
-        DEBUG(DB_VM, "getppages(): entry_point = %d\n", entry_point);
-
-        if (entry_point == -1) {
-            panic("getppages(): Cannot find desired memory block\n");
+	// allocate some memory while booting up
+	if(!isCoremapDone) {
+		beginningAddress = ram_stealmem(npages);
+	} else {
+		// after we iniliaze the VM
+        // we need to find the starting paging index of npage
+        // int startingPageIndex=find_index(npages);
+        int startingPageIndex = -1;
+        spinlock_acquire(&stealmem_lock);
+        numofPages = 0;
+        int counter = 0; // see if we enter the loop for the first time
+        for (int i =0; i < numofFrames && numofPages < npages; ++i) {
+        	if (coremap[i].is_used) {
+        		// curr page is in use
+				numofPages = 0;
+				startingPageIndex = -1;
+        	} else {
+        		if (counter == 0){
+        			startingPageIndex = i;
+        		}
+        		++numofPages;
+        	}
         }
-
-        addr = coremap[entry_point].paddr;
-        coremap[entry_point].contiguous = num_pages;
-
-        unsigned long end_point = entry_point + num_pages;
+        spinlock_release(&stealmem_lock);
+        //int startingPageIndex = find_index(npages);
+        if (startingPageIndex == -1) { // we did not find index
+            panic("getppages(): Can not find avaiable memory block\n");
+        }
+        beginningAddress = coremap[startingPageIndex].paddr;
+        // assign numofPages to cnitiguous field
+        coremap[startingPageIndex].contiguous = numofPages;
+        int endPageIndex = startingPageIndex + numofPages;
         // mark them as in use
-        for (unsigned int i = (unsigned int) entry_point; i < end_point; i++) {
+        for (int i =startingPageIndex; i < endPageIndex; i++) {
             coremap[i].is_used = true;
         }
 
-    } else {
-        DEBUG(DB_VM, "getppages(): calling ram_stealmem()\n");
-        addr = ram_stealmem(npages);
-    }
-    DEBUG(DB_VM, "getppages(): paddr is %d\n", addr);
-
-
-    return addr;
+	}
+    return beginningAddress;
 
 #else
-	spinlock_acquire(&stealmem_lock);
-	paddr = ram_stealmem(npages);
-	spinlock_release(&stealmem_lock);
-
-	return paddr;
+	beginningAddress = ram_stealmem(npages);
+	return beginningAddress;
 #endif
 }
 
@@ -308,7 +300,7 @@ vm_fault(int faulttype, vaddr_t faultaddress) {
 
 #if OPT_A3
 
-    bool valid = false;
+	bool valid = false;
 
     if (faultaddress >= vbase1 && faultaddress < vtop1) {
         paddr = as->as_pbase1 + (faultaddress - vbase1);
@@ -417,7 +409,7 @@ void
 as_destroy(struct addrspace *as) {
 #if OPT_A3
 
-    free_kpages(PADDR_TO_KVADDR(as->as_pbase2));
+	free_kpages(PADDR_TO_KVADDR(as->as_pbase2));
     free_kpages(PADDR_TO_KVADDR(as->as_pbase1));
     free_kpages(PADDR_TO_KVADDR(as->as_stackpbase));
     DEBUG(DB_VM, "as_destroy(): as destoried.\n");
@@ -531,7 +523,7 @@ int
 as_complete_load(struct addrspace *as) {
 #if OPT_A3
 
-    as->elf_loaded = true;
+	as->elf_loaded = true;
 #else
 	(void)as;
 #endif
