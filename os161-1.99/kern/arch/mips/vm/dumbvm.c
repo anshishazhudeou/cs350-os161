@@ -165,14 +165,12 @@ void
 free_kpages(vaddr_t addr) {
 #if OPT_A3
 
+	spinlock_acquire(&stealmem_lock);
 	if (isCoremapDone && addr == 0) {
         return;
     }
-    spinlock_acquire(&stealmem_lock);
     // physical
     paddr_t free_paddr = addr - MIPS_KSEG0;
-    DEBUG(DB_VM, "free_kpages(): physical paddr = %d\n", free_paddr);
-
 
     for (int i = 0; i < numofFrames; i++) {
         if (coremap[i].paddr == addr) {
@@ -182,7 +180,6 @@ free_kpages(vaddr_t addr) {
             }
         }
     }
-    DEBUG(DB_VM, "free_kpages(): freed paddr\n");
 
 
     for (int j = 0; j < numofFrames; j++) {
@@ -197,7 +194,6 @@ free_kpages(vaddr_t addr) {
             break;
         }
     }
-    DEBUG(DB_VM, "free_kpages(): freed all\n");
 
     spinlock_release(&stealmem_lock);
 
